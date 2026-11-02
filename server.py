@@ -12,6 +12,20 @@ PORT = 8080
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 class CustomHTTPHandler(http.server.SimpleHTTPRequestHandler):
+    extensions_map = http.server.SimpleHTTPRequestHandler.extensions_map.copy()
+    extensions_map.update({
+        '.js': 'application/javascript; charset=utf-8',
+        '.json': 'application/json; charset=utf-8',
+        '.webmanifest': 'application/manifest+json; charset=utf-8',
+        '.png': 'image/png',
+        '.svg': 'image/svg+xml',
+        '.jpg': 'image/jpeg',
+        '.jpeg': 'image/jpeg',
+        '.ico': 'image/x-icon',
+        '.css': 'text/css; charset=utf-8',
+        '.html': 'text/html; charset=utf-8',
+    })
+
     def end_headers(self):
         # ترويسات الأمان وجدار الحماية وسد الثغرات (Security & Anti-Exploit Headers)
         self.send_header('Access-Control-Allow-Origin', '*')

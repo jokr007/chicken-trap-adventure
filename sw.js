@@ -11,12 +11,16 @@ try {
 }
 
 // 2. إعدادات كاش اللعبة الأصلية PWA للتشغيل دون إنترنت
-const CACHE_NAME = 'chicken-game-v2';
+const CACHE_NAME = 'chicken-game-v3';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
   './manifest.json',
   './icon.svg',
+  './icon-192.png',
+  './icon-512.png',
+  './icon-maskable-192.png',
+  './icon-maskable-512.png',
   './css/style.css',
   './js/audio.js',
   './js/entities.js',
