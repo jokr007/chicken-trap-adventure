@@ -1,0 +1,487 @@
+        <div class="modal-content" style="max-width: 780px; max-height: 92vh; overflow-y: auto;">
+            <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                <h2 class="modal-title gold" style="font-size: 1.6rem;">⚙️ لوحة إدارة اللعبة والشحن الحقيقي</h2>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <button id="btnLockAdminPanel" class="btn-action" style="background: linear-gradient(135deg, #d32f2f, #b71c1c); padding: 6px 14px; font-size: 0.85rem;" title="قفل لوحة الإدارة ومسح الجلسة فوراً">🔒 قفل وخروج</button>
+                    <button id="btnCloseAdminPanel" class="btn-secondary" style="padding: 6px 14px; font-size: 0.9rem;">✕ إغلاق</button>
+                </div>
+            </div>
+
+            <!-- تبويبات لوحة المدير -->
+            <div class="admin-tabs">
+                <button class="admin-tab-btn active" data-admin-tab="orders">📋 طلبات الشحن</button>
+                <button class="admin-tab-btn" data-admin-tab="withdrawals" style="border-color: #00e676; color: #69f0ae; font-weight: 800;">💸 طلبات السحب المالي</button>
+                <button class="admin-tab-btn" data-admin-tab="vault">🔑 مخزن الأكواد</button>
+                <button class="admin-tab-btn" data-admin-tab="ads" style="border-color: #4caf50; color: #a5d6a7;">📢 شبكات الإعلانات</button>
+                <button class="admin-tab-btn" data-admin-tab="social" style="border-color: #ffd54f; color: #ffd54f;">🔔 القناة والتواصل والمانع</button>
+                <button class="admin-tab-btn" data-admin-tab="telegram">🤖 إشعارات تليجرام</button>
+                <button class="admin-tab-btn" data-admin-tab="waf" style="border-color: #00e5ff; color: #00e5ff;">🛡️ جدار الحماية (WAF)</button>
+                <button class="admin-tab-btn" data-admin-tab="security">🔒 الرمز السري</button>
+            </div>
+
+            <!-- التبويب 1: طلبات الشحن الواردة (Manual Direct ID Top-up) -->
+            <div id="adminTabOrders" class="admin-tab-content" style="width: 100%;">
+                <div style="background: rgba(255, 152, 0, 0.08); border: 1px solid rgba(255, 152, 0, 0.3); border-radius: 12px; padding: 12px 16px; margin-bottom: 12px; text-align: right;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+                        <div>
+                            <strong style="color: #ffb74d; font-size: 1.05rem;">🎮 إدارة طلبات الشحن المباشر اليدوي (Player ID Top-Up)</strong>
+                            <div style="font-size: 0.82rem; color: #cfd8dc; margin-top: 2px;">
+                                انسخ معرف اللاعب (Player ID) بضغطة زر واحدة، ثم اشحن له يدوياً من المواقع الرسمية، وحوّل الحالة إلى <strong>"تم الشحن بنجاح ✅"</strong> أو <strong>"مرفوض/استرجاع النقاط ❌"</strong>.
+                            </div>
+                        </div>
+                        <button class="btn-secondary" style="padding: 4px 12px; font-size: 0.8rem;" onclick="window.adminManager.renderOrders()">🔄 تحديث الطلبات</button>
+                    </div>
+                </div>
+
+                <!-- إحصائيات طلبات الشحن الأربعة -->
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 8px; margin-bottom: 14px;">
+                    <div class="admin-vault-box" style="border-color: rgba(255, 215, 0, 0.35);">
+                        <div style="font-size: 1.5rem;">📋</div>
+                        <div style="font-weight: 800; color: #ffd700; font-size: 0.82rem;">إجمالي الطلبات</div>
+                        <div id="adminOrderTotalCount" style="color: #fff; font-size: 1.3rem; font-weight: 900; margin-top: 2px;">0</div>
+                    </div>
+                    <div class="admin-vault-box" style="border-color: rgba(255, 152, 0, 0.45); background: rgba(255, 152, 0, 0.08);">
+                        <div style="font-size: 1.5rem;">⏳</div>
+                        <div style="font-weight: 800; color: #ffb74d; font-size: 0.82rem;">قيد الانتظار (Pending)</div>
+                        <div id="adminOrderPendingCount" style="color: #ff9800; font-size: 1.3rem; font-weight: 900; margin-top: 2px;">0</div>
+                    </div>
+                    <div class="admin-vault-box" style="border-color: rgba(76, 175, 80, 0.35);">
+                        <div style="font-size: 1.5rem;">✅</div>
+                        <div style="font-weight: 800; color: #81c784; font-size: 0.82rem;">تم الشحن بنجاح</div>
+                        <div id="adminOrderCompletedCount" style="color: #4caf50; font-size: 1.3rem; font-weight: 900; margin-top: 2px;">0</div>
+                    </div>
+                    <div class="admin-vault-box" style="border-color: rgba(244, 67, 54, 0.35);">
+                        <div style="font-size: 1.5rem;">❌</div>
+                        <div style="font-weight: 800; color: #e57373; font-size: 0.82rem;">مرفوض / مسترد</div>
+                        <div id="adminOrderRejectedCount" style="color: #f44336; font-size: 1.3rem; font-weight: 900; margin-top: 2px;">0</div>
+                    </div>
+                </div>
+
+                <!-- أزرار التصفية السريعة -->
+                <div style="display: flex; gap: 6px; margin-bottom: 12px; flex-wrap: wrap;">
+                    <button class="btn-secondary btn-order-filter active" style="padding: 4px 10px; font-size: 0.8rem;" onclick="window.adminManager.filterOrders('all', this)">كل الطلبات 📋</button>
+                    <button class="btn-secondary btn-order-filter" style="padding: 4px 10px; font-size: 0.8rem; border-color: #ff9800; color: #ffb74d;" onclick="window.adminManager.filterOrders('pending', this)">⏳ قيد الانتظار فقط</button>
+                    <button class="btn-secondary btn-order-filter" style="padding: 4px 10px; font-size: 0.8rem; border-color: #4caf50; color: #81c784;" onclick="window.adminManager.filterOrders('completed', this)">✅ تم الشحن بنجاح</button>
+                    <button class="btn-secondary btn-order-filter" style="padding: 4px 10px; font-size: 0.8rem; border-color: #f44336; color: #ff8a80;" onclick="window.adminManager.filterOrders('rejected', this)">❌ مرفوض ومسترد</button>
+                </div>
+
+                <div class="admin-table-container">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>رقم الطلب</th>
+                                <th>تاريخ الطلب</th>
+                                <th>نوع اللعبة</th>
+                                <th>اسم الباقة والنقاط</th>
+                                <th>معرف اللاعب (Player ID)</th>
+                                <th>حالة الطلب</th>
+                                <th>التحكم اليدوي للمدير</th>
+                            </tr>
+                        </thead>
+                        <tbody id="adminOrdersTableBody">
+                            <!-- توليد تلقائي -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- التبويب 1.5: طلبات السحب المالي (Mastercard, PayPal, Bank Wire) -->
+            <div id="adminTabWithdrawals" class="admin-tab-content" style="display: none; width: 100%;">
+                <div style="background: rgba(0, 230, 118, 0.08); border: 1px solid rgba(0, 230, 118, 0.25); border-radius: 12px; padding: 12px 16px; margin-bottom: 12px; text-align: right;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+                        <div>
+                            <strong style="color: #69f0ae; font-size: 1.05rem;">💸 إدارة طلبات السحب المالي والنقدي (Cash Payouts)</strong>
+                            <div style="font-size: 0.82rem; color: #cfd8dc; margin-top: 2px;">
+                                راجع بيانات بطاقات ماستر كارد، حسابات PayPal، والتحويلات البنكية (IBAN) واعتمد التحويل للعملاء.
+                            </div>
+                        </div>
+                        <button class="btn-secondary" style="padding: 4px 12px; font-size: 0.8rem;" onclick="window.adminManager.renderWithdrawals()">🔄 تحديث الطلبات</button>
+                    </div>
+                </div>
+
+                <!-- إحصائيات السحب الأربعة -->
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 8px; margin-bottom: 14px;">
+                    <div class="admin-vault-box" style="border-color: rgba(0, 230, 118, 0.35);">
+                        <div style="font-size: 1.5rem;">📋</div>
+                        <div style="font-weight: 800; color: #69f0ae; font-size: 0.82rem;">إجمالي الطلبات</div>
+                        <div id="adminWithdrawTotalCount" style="color: #ffd54f; font-size: 1.3rem; font-weight: 900; margin-top: 2px;">0</div>
+                    </div>
+                    <div class="admin-vault-box" style="border-color: rgba(255, 193, 7, 0.35);">
+                        <div style="font-size: 1.5rem;">⏳</div>
+                        <div style="font-weight: 800; color: #ffd54f; font-size: 0.82rem;">قيد الانتظار</div>
+                        <div id="adminWithdrawPendingCount" style="color: #ff9800; font-size: 1.3rem; font-weight: 900; margin-top: 2px;">0</div>
+                    </div>
+                    <div class="admin-vault-box" style="border-color: rgba(33, 150, 243, 0.35);">
+                        <div style="font-size: 1.5rem;">💵</div>
+                        <div style="font-weight: 800; color: #4fc3f7; font-size: 0.82rem;">المطلوب سحبه</div>
+                        <div id="adminWithdrawTotalUSD" style="color: #00e5ff; font-size: 1.3rem; font-weight: 900; margin-top: 2px;">$0.00</div>
+                    </div>
+                    <div class="admin-vault-box" style="border-color: rgba(76, 175, 80, 0.35);">
+                        <div style="font-size: 1.5rem;">✅</div>
+                        <div style="font-weight: 800; color: #81c784; font-size: 0.82rem;">تم تسليمه بنجاح</div>
+                        <div id="adminWithdrawPaidUSD" style="color: #00e676; font-size: 1.3rem; font-weight: 900; margin-top: 2px;">$0.00</div>
+                    </div>
+                </div>
+
+                <!-- أزرار تصفية الطلبات -->
+                <div style="display: flex; gap: 6px; margin-bottom: 8px; flex-wrap: wrap;">
+                    <button class="btn-secondary" style="padding: 4px 10px; font-size: 0.8rem;" onclick="window.adminManager.renderWithdrawals('all')">الكل</button>
+                    <button class="btn-secondary" style="padding: 4px 10px; font-size: 0.8rem; border-color: #ff9800; color: #ffd54f;" onclick="window.adminManager.renderWithdrawals('pending')">⏳ قيد الانتظار فقط</button>
+                    <button class="btn-secondary" style="padding: 4px 10px; font-size: 0.8rem; border-color: #4caf50; color: #81c784;" onclick="window.adminManager.renderWithdrawals('completed')">✅ تم التحويل</button>
+                    <button class="btn-secondary" style="padding: 4px 10px; font-size: 0.8rem; border-color: #f44336; color: #ff8a80;" onclick="window.adminManager.renderWithdrawals('rejected')">❌ مرفوض ومسترد</button>
+                </div>
+
+                <!-- جدول طلبات السحب -->
+                <div class="admin-table-container">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>رقم الطلب</th>
+                                <th>وسيلة السحب</th>
+                                <th>المبلغ والنقاط</th>
+                                <th>بيانات الحساب / المستلم</th>
+                                <th>الحالة</th>
+                                <th>التاريخ</th>
+                                <th>الإجراء</th>
+                            </tr>
+                        </thead>
+                        <tbody id="adminWithdrawalsTableBody">
+                            <!-- توليد تلقائي -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- التبويب 2: مخزن الأكواد الحقيقية -->
+            <div id="adminTabVault" class="admin-tab-content" style="display: none; width: 100%;">
+                <p class="modal-text" style="font-size: 0.92rem; text-align: right; margin-bottom: 12px;">
+                    يمكنك شراء كروت وبطاقات شحن جاهزة (من Shop2Game أو Midasbuy أو SEAGM) ووضع أكوادها هنا ليتم <strong>تسليمها تلقائياً وفوراً</strong> للاعب عند وصوله للنقاط المطلوبة:
+                </p>
+
+                <div class="admin-vault-cards">
+                    <div class="admin-vault-box">
+                        <div style="font-size: 1.8rem;">🔥</div>
+                        <div style="font-weight: 800; color: #ff5722;">أكواد فري فاير</div>
+                        <div id="vaultCountFF" style="color: #ffd54f; font-size: 1.1rem; font-weight: 900; margin-top: 4px;">0 كود متوفر</div>
+                    </div>
+                    <div class="admin-vault-box">
+                        <div style="font-size: 1.8rem;">🪖</div>
+                        <div style="font-weight: 800; color: #ffb300;">أكواد ببجي UC</div>
+                        <div id="vaultCountPubg" style="color: #ffd54f; font-size: 1.1rem; font-weight: 900; margin-top: 4px;">0 كود متوفر</div>
+                    </div>
+                    <div class="admin-vault-box">
+                        <div style="font-size: 1.8rem;">⚽</div>
+                        <div style="font-weight: 800; color: #29b6f6;">كوينز إي فوتبول</div>
+                        <div id="vaultCountEF" style="color: #ffd54f; font-size: 1.1rem; font-weight: 900; margin-top: 4px;">0 كود متوفر</div>
+                    </div>
+                    <div class="admin-vault-box">
+                        <div style="font-size: 1.8rem;">⚔️</div>
+                        <div style="font-weight: 800; color: #ff9800;">جواهر وتذاكر كلاش</div>
+                        <div id="vaultCountClash" style="color: #ffd54f; font-size: 1.1rem; font-weight: 900; margin-top: 4px;">0 كود متوفر</div>
+                    </div>
+                    <div class="admin-vault-box">
+                        <div style="font-size: 1.8rem;">🎯</div>
+                        <div style="font-weight: 800; color: #90a4ae;">نقاط CP كول أوف ديوتي</div>
+                        <div id="vaultCountCODM" style="color: #ffd54f; font-size: 1.1rem; font-weight: 900; margin-top: 4px;">0 كود متوفر</div>
+                    </div>
+                    <div class="admin-vault-box">
+                        <div style="font-size: 1.8rem;">🎁</div>
+                        <div style="font-weight: 800; color: #4caf50;">بطاقات Google</div>
+                        <div id="vaultCountGP" style="color: #ffd54f; font-size: 1.1rem; font-weight: 900; margin-top: 4px;">0 كود متوفر</div>
+                    </div>
+                </div>
+
+                <div class="monetization-input-group">
+                    <label style="color: #b0bec5; font-size: 0.9rem; font-weight: 700;">
+                        اختر اللعبة لإضافة أكواد جديدة:
+                    </label>
+                    <select id="vaultGameSelect" class="monetization-input" style="font-family: inherit;">
+                        <option value="freefire">🔥 فري فاير (Free Fire PINs)</option>
+                        <option value="pubg">🪖 ببجي موبايل (PUBG UC Codes)</option>
+                        <option value="efootball">⚽ إي فوتبول (eFootball Coins)</option>
+                        <option value="clash">⚔️ كلاش (Clash of Clans / Royale)</option>
+                        <option value="codm">🎯 كول أوف ديوتي (Call of Duty CP)</option>
+                        <option value="googleplay">🎁 بطاقات جوجل بلاي (Google Play Codes)</option>
+                    </select>
+                </div>
+
+                <div class="monetization-input-group" style="margin-top: 8px;">
+                    <label style="color: #b0bec5; font-size: 0.9rem; font-weight: 700;">
+                        الصق الأكواد الحقيقية هنا (كود واحد في كل سطر):
+                    </label>
+                    <textarea id="adminVaultCodesInput" class="admin-textarea" placeholder="مثال:&#10;FF-9941-8821-XXAA&#10;FF-7712-4411-ZZBB"></textarea>
+                </div>
+
+                <button id="btnSaveVaultCodes" class="btn-action" style="margin-top: 10px; width: 100%; justify-content: center;">
+                    📥 حفظ وإيداع الأكواد في المخزن
+                </button>
+            </div>
+
+            <!-- التبويب 3: شبكات الإعلانات والربح الحقيقي -->
+            <div id="adminTabAds" class="admin-tab-content" style="display: none; width: 100%;">
+                <p class="modal-text" style="font-size: 0.92rem; text-align: right; margin-bottom: 12px;">
+                    اختر شبكة الإعلانات التي تريد ربطها لجني الأرباح الحقيقية من نقرات ومشاهدات اللاعبين:
+                </p>
+
+                <div class="monetization-input-group">
+                    <label style="color: #b0bec5; font-weight: 700; font-size: 0.9rem;">
+                        1. معرف Google AdSense (Publisher ID):
+                    </label>
+                    <input type="text" id="adminAdsenseInput" class="monetization-input" placeholder="ca-pub-XXXXXXXXXXXXXXXX">
+                </div>
+
+                <div class="monetization-input-group" style="margin-top: 8px;">
+                    <label style="color: #b0bec5; font-weight: 700; font-size: 0.9rem;">
+                        2. معرف منطقة إعلانات Monetag (Zone ID):
+                    </label>
+                    <input type="text" id="adminMonetagInput" class="monetization-input" placeholder="مثال: 1234567">
+                    <small style="color:#78909c;">شبكة Monetag تقبل ألعاب الويب فوراً وبدون شروط وتدفع عبر PayPal أو USDT.</small>
+                </div>
+
+                <div class="monetization-input-group" style="margin-top: 8px;">
+                    <label style="color: #b0bec5; font-weight: 700; font-size: 0.9rem;">
+                        3. رابط الربح المباشر المربح (Smartlink / Direct Link من Adsterra أو Monetag):
+                    </label>
+                    <input type="url" id="adminDirectLinkInput" class="monetization-input" placeholder="https://example.com/smartlink">
+                    <small style="color:#78909c;">عند وضعه، يُفتح هذا الرابط عند مشاهدة إعلان المكافأة ليحقق لك أرباحاً فورية حقيقية!</small>
+                </div>
+
+                <button id="btnSaveAdminAds" class="btn-action" style="margin-top: 12px; width: 100%; justify-content: center;">
+                    💾 حفظ وتفعيل شبكات الإعلانات
+                </button>
+            </div>
+
+            <!-- التبويب 4: إشعارات التليجرام الفورية -->
+            <div id="adminTabTelegram" class="admin-tab-content" style="display: none; width: 100%;">
+                <div style="background: rgba(0, 136, 204, 0.15); border: 1px solid #0088cc; border-radius: 12px; padding: 12px; margin-bottom: 12px; text-align: right;">
+                    <strong style="color: #29b6f6;">📱 تنبيهات فورية على هاتفك:</strong><br>
+                    <span style="font-size: 0.85rem; color: #eceff1;">
+                        بمجرد أن يقوم لاعب بطلب شحن حسابه بالـ ID الخاص به، ستصلك رسالة فورية على هاتفك في تطبيق Telegram تحتوي على معرف اللاعب واللعبة والطلب لشحنه فوراً!
+                    </span>
+                </div>
+
+                <div class="monetization-input-group">
+                    <label style="color: #b0bec5; font-weight: 700; font-size: 0.9rem;">
+                        Telegram Bot Token:
+                    </label>
+                    <input type="text" id="adminTelegramToken" class="monetization-input" placeholder="مثال: 123456789:ABCdefGhIJKlmNoPQRstuVWXyz">
+                    <small style="color: #78909c;">يمكنك إنشاء بوت مجاناً في دقيقة عبر البوت الرسمي @BotFather على تليجرام.</small>
+                </div>
+
+                <div class="monetization-input-group" style="margin-top: 8px;">
+                    <label style="color: #b0bec5; font-weight: 700; font-size: 0.9rem;">
+                        Telegram Chat ID:
+                    </label>
+                    <input type="text" id="adminTelegramChatId" class="monetization-input" placeholder="مثال: 987654321">
+                    <small style="color: #78909c;">يمكنك معرفة معرف حسابك مجاناً عبر إرسال رسالة إلى @userinfobot على تليجرام.</small>
+                </div>
+
+                <div style="display: flex; gap: 8px; margin-top: 12px;">
+                    <button id="btnSaveTelegramConfig" class="btn-action" style="flex: 1; justify-content: center;">
+                        💾 حفظ إعدادات تليجرام
+                    </button>
+                    <button id="btnTestTelegramAlert" class="btn-secondary" style="border-color: #0088cc; color: #29b6f6;">
+                        📲 تجربة إرسال رسالة
+                    </button>
+                </div>
+            </div>
+
+            <!-- التبويب 4: القناة الإلزامية ومواقع التواصل ومنع الإعلانات -->
+            <div id="adminTabSocial" class="admin-tab-content" style="display: none; width: 100%;">
+                <p class="modal-text" style="font-size: 0.92rem; text-align: right; margin-bottom: 12px;">
+                    تحكم هنا في شروط الاشتراك الإلزامي للقناة، روابط مواقع التواصل، ونظام منع حاجب الإعلانات:
+                </p>
+
+                <!-- قسم الاشتراك الإلزامي -->
+                <div style="background: rgba(255, 152, 0, 0.1); border: 1px solid rgba(255, 152, 0, 0.35); border-radius: 12px; padding: 14px; margin-bottom: 12px; text-align: right;">
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; flex-wrap: wrap; gap: 8px;">
+                        <label style="font-weight: 800; color: #ffd54f; font-size: 1rem; display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                            <input type="checkbox" id="adminMandatorySubChk" style="width: 18px; height: 18px; accent-color: #ff9800;">
+                            فرض الاشتراك في القناة كشرط إلزامي للعب
+                        </label>
+                        <button id="btnResetAdminSub" class="btn-secondary" style="font-size: 0.78rem; padding: 4px 10px;">
+                            🔄 إعادة تعيين اشتراكي للتجربة
+                        </button>
+                    </div>
+
+                    <div class="monetization-input-group">
+                        <label style="color: #b0bec5; font-size: 0.88rem; font-weight: 700;">اسم القناة المعروض:</label>
+                        <input type="text" id="adminChannelNameInp" class="monetization-input" placeholder="مثال: القناة الرسمية للعبة كوكو والأفخاخ">
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 8px; margin-top: 8px;">
+                        <div class="monetization-input-group">
+                            <label style="color: #b0bec5; font-size: 0.88rem; font-weight: 700;">رابط القناة (URL):</label>
+                            <input type="url" id="adminChannelUrlInp" class="monetization-input" placeholder="https://youtube.com/@channel">
+                        </div>
+                        <div class="monetization-input-group">
+                            <label style="color: #b0bec5; font-size: 0.88rem; font-weight: 700;">نوع القناة:</label>
+                            <select id="adminChannelTypeSel" class="monetization-input" style="font-family: inherit;">
+                                <option value="youtube">🔴 يوتيوب (YouTube)</option>
+                                <option value="telegram">✈️ تليجرام (Telegram)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- قسم منع حاجب الإعلانات -->
+                <div style="background: rgba(244, 67, 54, 0.1); border: 1px solid rgba(244, 67, 54, 0.35); border-radius: 12px; padding: 14px; margin-bottom: 12px; text-align: right;">
+                    <label style="font-weight: 800; color: #ff8a80; font-size: 1rem; display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                        <input type="checkbox" id="adminAntiAdblockChk" style="width: 18px; height: 18px; accent-color: #f44336;">
+                        تفعيل نظام منع حاجب الإعلانات (Anti-AdBlock)
+                    </label>
+                    <small style="color: #cfd8dc; display: block; margin-top: 4px;">
+                        عند تفعيله، لن يتمكن أي لاعب من بدء اللعبة إذا كان يستخدم مانع إعلانات، مما يضمن أرباحك وتغطية تكاليف قسائم الشحن.
+                    </small>
+                </div>
+
+                <!-- قسم روابط التواصل الاجتماعي -->
+                <div style="background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 14px; text-align: right;">
+                    <strong style="color: #4fc3f7; font-size: 0.95rem; display: block; margin-bottom: 8px;">🌐 روابط حسابات التواصل الاجتماعي:</strong>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                        <div class="monetization-input-group">
+                            <label style="color: #b0bec5; font-size: 0.82rem; font-weight: 700;">🔴 يوتيوب:</label>
+                            <input type="url" id="adminSocialYoutube" class="monetization-input" placeholder="https://youtube.com/@...">
+                        </div>
+                        <div class="monetization-input-group">
+                            <label style="color: #b0bec5; font-size: 0.82rem; font-weight: 700;">✈️ تليجرام:</label>
+                            <input type="url" id="adminSocialTelegram" class="monetization-input" placeholder="https://t.me/...">
+                        </div>
+                        <div class="monetization-input-group">
+                            <label style="color: #b0bec5; font-size: 0.82rem; font-weight: 700;">🎵 تيك توك:</label>
+                            <input type="url" id="adminSocialTiktok" class="monetization-input" placeholder="https://tiktok.com/@...">
+                        </div>
+                        <div class="monetization-input-group">
+                            <label style="color: #b0bec5; font-size: 0.82rem; font-weight: 700;">📘 فيسبوك:</label>
+                            <input type="url" id="adminSocialFacebook" class="monetization-input" placeholder="https://facebook.com/...">
+                        </div>
+                        <div class="monetization-input-group">
+                            <label style="color: #b0bec5; font-size: 0.82rem; font-weight: 700;">📸 إنستغرام:</label>
+                            <input type="url" id="adminSocialInstagram" class="monetization-input" placeholder="https://instagram.com/...">
+                        </div>
+                        <div class="monetization-input-group">
+                            <label style="color: #b0bec5; font-size: 0.82rem; font-weight: 700;">💬 ديسكورد:</label>
+                            <input type="url" id="adminSocialDiscord" class="monetization-input" placeholder="https://discord.gg/...">
+                        </div>
+                    </div>
+                </div>
+
+                <button id="btnSaveAdminSocial" class="btn-action" style="margin-top: 12px; width: 100%; justify-content: center;">
+                    💾 حفظ إعدادات القناة والتواصل والمانع
+                </button>
+            </div>
+
+            <!-- التبويب 5: جدار الحماية وسجلات الأمان والمستخدمين -->
+            <div id="adminTabWaf" class="admin-tab-content" style="display: none; width: 100%;">
+                <div style="background: rgba(0, 229, 255, 0.08); border: 1px solid rgba(0, 229, 255, 0.3); border-radius: 12px; padding: 14px; margin-bottom: 14px; text-align: right;">
+                    <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
+                        <div>
+                            <strong style="color: #00e5ff; font-size: 1.1rem; display: flex; align-items: center; gap: 6px;">
+                                🛡️ جدار الحماية السحابي (Web Application Firewall - WAF)
+                            </strong>
+                            <small style="color: #b0bec5; display: block; margin-top: 4px;">
+                                حماية متعددة الطبقات ضد الروبوتات، والبريد الوهمي، وثغرات XSS، وهجمات القوة الغاشمة، والتلاعب بالنقاط.
+                            </small>
+                        </div>
+                        <span style="background: rgba(76, 175, 80, 0.2); border: 1px solid #4caf50; color: #81c784; padding: 4px 12px; border-radius: 20px; font-size: 0.82rem; font-weight: 800;">
+                            🟢 الدرع الأمني نشط ومراقب 100%
+                        </span>
+                    </div>
+                </div>
+
+                <!-- إحصائيات الأمان الأربعة -->
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin-bottom: 16px;">
+                    <div class="admin-vault-box" style="border-color: rgba(244, 67, 54, 0.4);">
+                        <div style="font-size: 1.6rem;">🤖</div>
+                        <div style="font-weight: 800; color: #ef5350; font-size: 0.85rem;">روبوتات مصدودة</div>
+                        <div id="wafCountBots" style="color: #ffd54f; font-size: 1.3rem; font-weight: 900; margin-top: 4px;">0</div>
+                    </div>
+                    <div class="admin-vault-box" style="border-color: rgba(255, 152, 0, 0.4);">
+                        <div style="font-size: 1.6rem;">📧</div>
+                        <div style="font-weight: 800; color: #ffb74d; font-size: 0.85rem;">بريد وهمي محظور</div>
+                        <div id="wafCountFake" style="color: #ffd54f; font-size: 1.3rem; font-weight: 900; margin-top: 4px;">0</div>
+                    </div>
+                    <div class="admin-vault-box" style="border-color: rgba(233, 30, 99, 0.4);">
+                        <div style="font-size: 1.6rem;">⚠️</div>
+                        <div style="font-weight: 800; color: #f48fb1; font-size: 0.85rem;">محاولات غش أحبطت</div>
+                        <div id="wafCountCheats" style="color: #ffd54f; font-size: 1.3rem; font-weight: 900; margin-top: 4px;">0</div>
+                    </div>
+                    <div class="admin-vault-box" style="border-color: rgba(0, 229, 255, 0.4);">
+                        <div style="font-size: 1.6rem;">👥</div>
+                        <div style="font-weight: 800; color: #4fc3f7; font-size: 0.85rem;">مستخدمون حقيقيون</div>
+                        <div id="wafCountUsers" style="color: #ffd54f; font-size: 1.3rem; font-weight: 900; margin-top: 4px;">0</div>
+                    </div>
+                </div>
+
+                <!-- جدول المستخدمين المسجلين الموثقين -->
+                <div style="margin-bottom: 16px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                        <span style="font-size: 0.92rem; color: #ffd54f; font-weight: 700;">👥 قائمة حسابات اللاعبين الموثقة:</span>
+                        <button class="btn-secondary" style="padding: 4px 10px; font-size: 0.78rem;" onclick="if(window.authManager) window.authManager.renderAdminUsersList()">🔄 تحديث القائمة</button>
+                    </div>
+                    <div class="admin-table-container">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>اسم المستخدم</th>
+                                    <th>البريد الإلكتروني الموثق</th>
+                                    <th>حالة الحساب</th>
+                                    <th>تاريخ التسجيل</th>
+                                    <th>إجراء</th>
+                                </tr>
+                            </thead>
+                            <tbody id="adminUsersTableBody">
+                                <!-- توليد تلقائي -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- جدول سجل التهديدات المباشر -->
+                <div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                        <span style="font-size: 0.92rem; color: #ff8a80; font-weight: 700;">🚨 سجل رصد التهديدات والمحاولات المشبوهة (Live Threat Feed):</span>
+                        <button class="btn-secondary" style="padding: 4px 10px; font-size: 0.78rem;" onclick="if(window.adminManager) window.adminManager.renderWafLogs()">🔄 تحديث السجل</button>
+                    </div>
+                    <div class="admin-table-container">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>رقم الرصد</th>
+                                    <th>نوع التهديد</th>
+                                    <th>تفاصيل النشاط المشبوه</th>
+                                    <th>الوقت والتاريخ</th>
+                                    <th>حالة الردع</th>
+                                </tr>
+                            </thead>
+                            <tbody id="adminWafLogsTableBody">
+                                <!-- توليد تلقائي -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- التبويب 6: تغيير وتشفير الرمز السري للمدير -->
+            <div id="adminTabSecurity" class="admin-tab-content" style="display: none; width: 100%;">
+                <div style="background: rgba(0, 229, 255, 0.08); border: 1px solid rgba(0, 229, 255, 0.3); border-radius: 12px; padding: 14px; margin-bottom: 14px; text-align: right;">
+                    <strong style="color: #00e5ff; font-size: 1.05rem;">🔒 تأمين لوحة الإدارة بتشفير SHA-256</strong>
+                    <p style="font-size: 0.85rem; color: #eceff1; margin-top: 4px; line-height: 1.6;">
+                        يتم تشفير وتجزئة الرمز السري فوراً بتقنية <strong>SHA-256 التشفيرية مع Salt</strong> ولا يتم حفظه كنص صريح في أي ملف، مما يجعل من المستحيل على أي شخص اختراقه أو معرفته حتى لو فحص ملفات الموقع.
+                    </p>
+                </div>
+
+                <div class="monetization-input-group">
+                    <label style="color: #b0bec5; font-weight: 700; font-size: 0.9rem;">
+                        أدخل الرمز السري الجديد الخاص بك فقط:
+                    </label>
+                    <input type="password" id="adminNewPinInput" class="monetization-input" placeholder="اكتب رمزك السري الجديد هنا..." maxlength="20" style="font-size: 1.1rem; letter-spacing: 2px;">
+                    <small style="color: #81c784;">🛡️ احفظ هذا الرمز جيداً. هو مفتاحك السري الوحيد للوصول للوحة الإدارة.</small>
+                </div>
+                <button id="btnSaveNewPin" class="btn-action" style="margin-top: 12px; width: 100%; justify-content: center; background: linear-gradient(135deg, #00c853, #1b5e20);">
+                    🔒 حفظ وتشفير الرمز السري الآن
+                </button>
+            </div>
+        </div>

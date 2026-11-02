@@ -1,0 +1,19 @@
+{
+  "name": "مغامرة الدجاجة والأفخاخ",
+  "short_name": "الدجاجة والأفخاخ",
+  "description": "لعبة مغامرات الدجاجة كوكو والهروب من الأفخاخ وجمع قسائم الشحن",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#1a1c23",
+  "theme_color": "#ff9800",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

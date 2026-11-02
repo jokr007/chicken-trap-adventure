@@ -1,0 +1,19 @@
+{
+  "name": "chicken-and-traps-adventure",
+  "version": "2.0.0",
+  "description": "Chicken & Traps Adventure - HTML5 Canvas Web Game",
+  "main": "index.html",
+  "scripts": {
+    "start": "python server.py",
+    "serve": "python -m http.server 8080"
+  },
+  "keywords": [
+    "html5-game",
+    "canvas",
+    "javascript",
+    "pwa",
+    "arcade"
+  ],
+  "author": "Chicken Game Team",
+  "license": "MIT"
+}
