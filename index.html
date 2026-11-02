@@ -607,3 +607,1023 @@
                 </button>
                 <button id="btnCloseWinnersBoard" class="btn-action" style="flex: 1; justify-content: center; background: linear-gradient(135deg, #d97706, #b45309);">
                     حسناً، استمر في اللعب 🚀
+
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- نافذة إعدادات الأرباح وحساب Google AdSense (Monetization Settings) -->
+    <div id="monetizationModal" class="modal-overlay">
+        <div class="modal-content" style="max-width: 580px;">
+            <div style="font-size: 3rem;">💰</div>
+            <h2 class="modal-title gold">لوحة الأرباح وإدارة الإعلانات</h2>
+            <p class="modal-text" style="font-size: 0.95rem;">
+                هنا يمكنك متابعة الأرباح التقديرية وربط حساب <strong>Google AdSense</strong> الخاص بك لجني الأرباح الحقيقية من زوار اللعبة!
+            </p>
+
+            <div class="stats-grid">
+                <div class="stat-box">
+                    <div id="adEarningsDisplayModal" class="stat-box-value" style="color: #4caf50;">$0.00</div>
+                    <div class="stat-box-label">الأرباح التقديرية (USD)</div>
+                </div>
+                <div class="stat-box">
+                    <div id="adImpressionsDisplay" class="stat-box-value">0</div>
+                    <div class="stat-box-label">عدد المشاهدات (Impressions)</div>
+                </div>
+            </div>
+
+            <div class="monetization-input-group">
+                <label style="font-weight: 700; color: #b0bec5; font-size: 0.95rem;">
+                    معرف ناشر Google AdSense (Publisher ID):
+                </label>
+                <input type="text" id="adsensePubIdInput" class="monetization-input" placeholder="ca-pub-1234567890123456" value="">
+                <small style="color: #78909c;">احصل عليه من لوحة تحكم AdSense وضعه هنا لتفعيل الإعلانات الحقيقية تلقائياً.</small>
+            </div>
+
+            <div class="btn-group" style="width: 100%;">
+                <button id="btnSavePubId" class="btn-action" style="flex: 1; justify-content: center;">
+                    💾 حفظ وتفعيل الإعلانات
+                </button>
+                <button id="btnCloseMonetization" class="btn-secondary">
+                    إغلاق
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- نافذة متجر استبدال النقاط بقسائم شحن الألعاب (Voucher Store Modal) -->
+    <div id="voucherStoreModal" class="modal-overlay">
+        <div class="modal-content" style="max-width: 680px; max-height: 90vh; overflow-y: auto;">
+            <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+                <h2 class="modal-title gold" style="font-size: 1.6rem;">🎁 متجر قسائم شحن الألعاب</h2>
+                <button id="btnCloseVoucherStore" class="btn-secondary" style="padding: 6px 14px; font-size: 0.9rem;">✕ إغلاق</button>
+            </div>
+
+            <!-- رصيد النقاط الحالي للاعب -->
+            <div style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); border-radius: 14px; padding: 12px 20px; width: 100%; display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <span style="color: #90a4ae; font-size: 0.9rem;">رصيد نقاطك المتوفر للشحن:</span>
+                    <div style="font-size: 1.6rem; font-weight: 900; color: #ffd54f;">
+                        💰 <span id="voucherStorePlayerScore">0</span> نقطة
+                    </div>
+                </div>
+                <div style="color: #4caf50; font-weight: 800; font-size: 0.9rem; text-align: left;">
+                    ✨ العب واجمع البيض<br>أو شاهد إعلانات لربح النقاط
+                </div>
+            </div>
+
+            <!-- شريط المكافأة السريعة: إعلان = نقاط إضافية للشحن -->
+            <div class="store-ad-bonus-box">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <span style="font-size: 1.8rem;">📺</span>
+                    <div style="text-align: right;">
+                        <div style="font-weight: 800; color: #fff; font-size: 0.95rem;">هل تنقصك نقاط لاستبدال القسيمة؟</div>
+                        <div style="font-size: 0.8rem; color: #b0bec5;">شاهد إعلاناً قصيراً واحصل على <strong>+2,500 نقطة</strong> فوراً!</div>
+                    </div>
+                </div>
+                <button id="btnStoreWatchAd" class="btn-action" style="font-size: 0.9rem; padding: 8px 16px; white-space: nowrap;">
+                    شاهد واربح 2,500+ 💎
+                </button>
+            </div>
+
+            <!-- شريط دعوة الأصدقاء داخل المتجر: ادعُ صديقاً = 500 نقطة -->
+            <div style="background: linear-gradient(135deg, rgba(142, 36, 170, 0.25), rgba(94, 53, 177, 0.25)); border: 1px solid rgba(171, 71, 188, 0.45); border-radius: 12px; padding: 10px 16px; width: 100%; display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-top: 8px;">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <span style="font-size: 1.8rem;">👥</span>
+                    <div style="text-align: right;">
+                        <div style="font-weight: 800; color: #e1bee7; font-size: 0.95rem;">ادعُ أصدقاءك واشحن مجاناً!</div>
+                        <div style="font-size: 0.8rem; color: #b0bec5;">اربح <strong>+500 نقطة</strong> عن كل صديق ينضم للعبة عبر رابطك.</div>
+                    </div>
+                </div>
+                <button id="btnStoreOpenReferral" class="btn-action" style="background: linear-gradient(135deg, #ab47bc, #7b1fa2); font-size: 0.85rem; padding: 8px 14px; white-space: nowrap;">
+                    ادعُ واربح 👥
+                </button>
+            </div>
+
+            <!-- تبويبات التصفية للألعاب -->
+            <div class="voucher-tabs">
+                <button class="voucher-tab-btn active" data-tab="all">الكل (All)</button>
+                <button class="voucher-tab-btn" data-tab="withdraw_nav" style="border-color: #00e676; color: #00e676; font-weight: 900;">💸 سحب كاش وبنوك</button>
+                <button class="voucher-tab-btn" data-tab="freefire">🔥 فري فاير</button>
+                <button class="voucher-tab-btn" data-tab="pubg">🪖 ببجي (UC)</button>
+                <button class="voucher-tab-btn" data-tab="efootball">⚽ إي فوتبول</button>
+                <button class="voucher-tab-btn" data-tab="clash">⚔️ كلاش</button>
+                <button class="voucher-tab-btn" data-tab="codm">🎯 كول أوف ديوتي</button>
+                <button class="voucher-tab-btn" data-tab="googleplay">🎁 بطاقات Google</button>
+                <button class="voucher-tab-btn" data-tab="history" style="border-color: #ffd700; color: #ffd700;">📜 سجل قسائمي</button>
+            </div>
+
+            <!-- شبكة كروت القسائم -->
+            <div id="voucherGrid" class="voucher-grid">
+                <!-- يتم التوليد عبر js/vouchers.js -->
+            </div>
+
+            <!-- قسم سجل القسائم السابقة -->
+            <div id="voucherHistorySection" style="display: none; width: 100%;">
+                <h3 style="color: #ffd700; font-size: 1.1rem; margin-bottom: 10px; text-align: right;">سجل القسائم والرموز المستردة:</h3>
+                <div id="voucherHistoryList"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- نافذة سحب الأرباح والأموال الحقيقي (Real Cash Withdrawal Modal) -->
+    <div id="withdrawalModal" class="modal-overlay">
+        <div class="modal-content" style="max-width: 680px; max-height: 92vh; overflow-y: auto;">
+            <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <span style="font-size: 2rem;">💸</span>
+                    <div>
+                        <h2 class="modal-title gold" style="font-size: 1.55rem; text-align: right; margin: 0;">سحب الأرباح والأموال الحقيقي</h2>
+                        <div style="font-size: 0.8rem; color: #b0bec5; text-align: right;">ماستر كارد • باي بال • تحويل بنكي لكافة البنوك</div>
+                    </div>
+                </div>
+                <button id="btnCloseWithdrawModal" class="btn-secondary" style="padding: 6px 14px; font-size: 0.9rem;">✕ إغلاق</button>
+            </div>
+
+            <!-- رصيد النقاط المعادل بالدولار -->
+            <div class="withdraw-balance-banner">
+                <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
+                    <div>
+                        <span style="color: #b0bec5; font-size: 0.85rem;">رصيدك القابل للسحب:</span>
+                        <div style="font-size: 1.6rem; font-weight: 900; color: #ffd54f;">
+                            💰 <span id="withdrawPlayerScore">0</span> <span style="font-size: 1rem; color: #cfd8dc;">نقطة</span>
+                        </div>
+                    </div>
+                    <div style="text-align: left;">
+                        <span style="color: #81c784; font-size: 0.85rem; font-weight: 700;">القيمة النقدية الحقيقية:</span>
+                        <div id="withdrawPlayerUSD" style="font-size: 1.8rem; font-weight: 900; color: #00e676;">
+                            $0.00
+                        </div>
+                    </div>
+                </div>
+                <div class="withdraw-rate-badge">
+                    <span>💵 50,000 نقطة = 1.00$ USD</span>
+                    <span>⚡ رسوم السحب: 0% مجاناً</span>
+                    <span>⏱️ المعالجة: خلال 24 - 48 ساعة</span>
+                </div>
+            </div>
+
+            <!-- تبويبات نافذة السحب -->
+            <div class="withdraw-tabs">
+                <button type="button" class="withdraw-tab-btn active" id="tabWithdrawFormBtn">
+                    💸 تقديم طلب سحب جديد
+                </button>
+                <button type="button" class="withdraw-tab-btn" id="tabWithdrawHistBtn">
+                    📜 سجل طلبات السحب الخاصة بي
+                </button>
+            </div>
+
+            <!-- 1. قسم نموذج السحب -->
+            <div id="withdrawFormSection" style="width: 100%;">
+                <!-- اختيار طريقة السحب -->
+                <div style="text-align: right; margin-bottom: 8px;">
+                    <label style="font-size: 0.95rem; font-weight: 800; color: #ffd54f;">
+                        1️⃣ اختر طريقة استلام الأرباح:
+                    </label>
+                </div>
+
+                <div class="withdrawal-methods-grid">
+                    <!-- كارت ماستر كارد -->
+                    <div class="withdrawal-method-card active" data-method="mastercard">
+                        <div class="method-card-header">
+                            <span class="method-card-icon">💳</span>
+                            <span class="method-popular-badge">الأكثر طلباً 🔥</span>
+                        </div>
+                        <div class="method-card-title">بطاقة ماستر كارد / فيزا</div>
+                        <div class="method-card-sub">Mastercard Direct Card Payout</div>
+                        <div class="method-card-fee">الحد الأدنى: <strong>$10</strong></div>
+                    </div>
+
+                    <!-- باي بال -->
+                    <div class="withdrawal-method-card" data-method="paypal">
+                        <div class="method-card-header">
+                            <span class="method-card-icon">🅿️</span>
+                            <span class="method-fast-badge">تحويل فوري ⚡</span>
+                        </div>
+                        <div class="method-card-title">باي بال (PayPal)</div>
+                        <div class="method-card-sub">Instant PayPal USD Transfer</div>
+                        <div class="method-card-fee">الحد الأدنى: <strong>$5</strong></div>
+                    </div>
+
+                    <!-- تحويل بنكي مباشر -->
+                    <div class="withdrawal-method-card" data-method="bank">
+                        <div class="method-card-header">
+                            <span class="method-card-icon">🏦</span>
+                            <span class="method-bank-badge">حساب بنكي 🏛️</span>
+                        </div>
+                        <div class="method-card-title">التحويل البنكي (IBAN)</div>
+                        <div class="method-card-sub">Local & International Wire</div>
+                        <div class="method-card-fee">الحد الأدنى: <strong>$25</strong></div>
+                    </div>
+
+                    <!-- بنوك ومحافظ إلكترونية أخرى -->
+                    <div class="withdrawal-method-card" data-method="other">
+                        <div class="method-card-header">
+                            <span class="method-card-icon">🌐</span>
+                            <span class="method-wallet-badge">محافظ وبنوك 📱</span>
+                        </div>
+                        <div class="method-card-title">بايونير / وايز / كاش</div>
+                        <div class="method-card-sub">Payoneer, Wise & Wallets</div>
+                        <div class="method-card-fee">الحد الأدنى: <strong>$5</strong></div>
+                    </div>
+                </div>
+
+                <!-- اختيار المبلغ المراد سحبه -->
+                <div style="text-align: right; margin-top: 14px; margin-bottom: 8px;">
+                    <label style="font-size: 0.95rem; font-weight: 800; color: #ffd54f;">
+                        2️⃣ حدد مبلغ السحب بالدولار (USD):
+                    </label>
+                </div>
+
+                <!-- أزرار الباقات السريعة -->
+                <div id="withdrawPackagesContainer" class="amount-packages-grid">
+                    <!-- يتم توليدها تلقائياً حسب الطريقة المختارة -->
+                </div>
+
+                <!-- حقل إدخال مبلغ مخصص -->
+                <div class="custom-amount-wrapper">
+                    <span style="font-size: 0.88rem; color: #b0bec5; font-weight: 700;">أو اكتب مبلغاً مخصصاً بالدولار ($):</span>
+                    <div style="display: flex; align-items: center; gap: 8px; width: 140px;">
+                        <span style="color: #00e676; font-weight: 900; font-size: 1.2rem;">$</span>
+                        <input type="number" id="withdrawCustomAmount" class="monetization-input" min="5" step="1" placeholder="10" value="10" style="text-align: center; font-weight: 800; font-size: 1.1rem;">
+                    </div>
+                </div>
+
+                <!-- صندوق الحساب والمعاينة المباشرة -->
+                <div class="withdraw-calc-box">
+                    <div class="calc-row">
+                        <span class="calc-label">المبلغ المطلوب سحبه:</span>
+                        <span id="withdrawPreviewUSD" class="calc-value" style="color: #00e676; font-size: 1.25rem;">$10.00</span>
+                    </div>
+                    <div class="calc-row">
+                        <span class="calc-label">النقاط التي سيتم خصمها:</span>
+                        <span id="withdrawReqPoints" class="calc-value" style="color: #ffd54f;">500,000 نقطة</span>
+                    </div>
+                    <div class="calc-row">
+                        <span class="calc-label">رصيدك المتبقي بعد السحب:</span>
+                        <span id="withdrawRemainingScore" class="calc-value" style="color: #81c784;">0</span>
+                    </div>
+                    <div id="withdrawMinNotice" class="calc-min-notice">
+                        الحد الأدنى للسحب عبر هذه الطريقة: $10 (500,000 نقطة)
+                    </div>
+                </div>
+
+                <!-- 3. نماذج إدخال البيانات حسب الطريقة المختارة -->
+                <div style="text-align: right; margin-top: 14px; margin-bottom: 8px;">
+                    <label style="font-size: 0.95rem; font-weight: 800; color: #ffd54f;">
+                        3️⃣ بيانات الحساب المستلم لتحويل الأموال:
+                    </label>
+                </div>
+
+                <!-- نموذج بطاقة ماستر كارد -->
+                <div id="withdrawForm_mastercard" class="method-form-box">
+                    <div style="background: rgba(255, 152, 0, 0.1); border: 1px solid rgba(255, 152, 0, 0.3); border-radius: 10px; padding: 10px; margin-bottom: 10px; font-size: 0.85rem; color: #ffcc80;">
+                        💳 <strong>سحب بطاقة ماستر كارد:</strong> يتم إرسال المبلغ كإيداع بنكي مباشر (Card Payout) إلى بطاقتك الائتمانية أو مسبقة الدفع.
+                    </div>
+                    <div class="monetization-input-group">
+                        <label style="color: #b0bec5; font-size: 0.85rem; font-weight: 700;">الاسم الكامل لصاحب البطاقة (كما هو مدون عليها بالإنجليزية):</label>
+                        <input type="text" id="mcCardHolder" class="monetization-input" placeholder="AHMED MOHAMED" style="text-transform: uppercase;">
+                    </div>
+                    <div class="monetization-input-group" style="margin-top: 8px;">
+                        <label style="color: #b0bec5; font-size: 0.85rem; font-weight: 700;">رقم بطاقة ماستر كارد (16 رقماً):</label>
+                        <input type="text" id="mcCardNumber" class="monetization-input" placeholder="5412 7500 0000 0000" maxlength="19" style="font-family: monospace; letter-spacing: 2px; font-size: 1.15rem; direction: ltr; text-align: center;">
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px;">
+                        <div class="monetization-input-group">
+                            <label style="color: #b0bec5; font-size: 0.85rem; font-weight: 700;">تاريخ الصلاحية (MM/YY):</label>
+                            <input type="text" id="mcCardExpiry" class="monetization-input" placeholder="08/28" maxlength="5" style="text-align: center; font-family: monospace;">
+                        </div>
+                        <div class="monetization-input-group">
+                            <label style="color: #b0bec5; font-size: 0.85rem; font-weight: 700;">اسم البنك المصدر للبطاقة:</label>
+                            <input type="text" id="mcIssuingBank" class="monetization-input" placeholder="مثال: البنك الأهلي / الراجحي / بنك دبي">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- نموذج باي بال -->
+                <div id="withdrawForm_paypal" class="method-form-box" style="display: none;">
+                    <div style="background: rgba(3, 169, 244, 0.1); border: 1px solid rgba(3, 169, 244, 0.3); border-radius: 10px; padding: 10px; margin-bottom: 10px; font-size: 0.85rem; color: #81d4fa;">
+                        🅿️ <strong>سحب باي بال:</strong> سيتم إرسال المبلغ بعملة USD مباشرة إلى بريدك الإلكتروني المسجل في PayPal دون أي اقتطاعات.
+                    </div>
+                    <div class="monetization-input-group">
+                        <label style="color: #b0bec5; font-size: 0.85rem; font-weight: 700;">البريد الإلكتروني لحساب PayPal:</label>
+                        <input type="email" id="paypalEmail" class="monetization-input" placeholder="user@paypal.com" style="direction: ltr;">
+                    </div>
+                    <div class="monetization-input-group" style="margin-top: 8px;">
+                        <label style="color: #b0bec5; font-size: 0.85rem; font-weight: 700;">تأكيد البريد الإلكتروني لحساب PayPal:</label>
+                        <input type="email" id="paypalEmailConfirm" class="monetization-input" placeholder="إعادة كتابة البريد للتأكيد" style="direction: ltr;">
+                    </div>
+                    <div class="monetization-input-group" style="margin-top: 8px;">
+                        <label style="color: #b0bec5; font-size: 0.85rem; font-weight: 700;">اسم صاحب الحساب بالكامل:</label>
+                        <input type="text" id="paypalHolderName" class="monetization-input" placeholder="اسمك المسجل في بايبال">
+                    </div>
+                </div>
+
+                <!-- نموذج التحويل البنكي المباشر (Bank Wire) -->
+                <div id="withdrawForm_bank" class="method-form-box" style="display: none;">
+                    <div style="background: rgba(76, 175, 80, 0.1); border: 1px solid rgba(76, 175, 80, 0.3); border-radius: 10px; padding: 10px; margin-bottom: 10px; font-size: 0.85rem; color: #a5d6a7;">
+                        🏦 <strong>التحويل البنكي الدولي والمحلي:</strong> متاح لجميع البنوك حول العالم (مصر، السعودية، الجزائر، المغرب، الإمارات، العراق، وباقي الدول).
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                        <div class="monetization-input-group">
+                            <label style="color: #b0bec5; font-size: 0.85rem; font-weight: 700;">اسم البنك / المصرف:</label>
+                            <input type="text" id="bankName" class="monetization-input" placeholder="مثال: البنك التجاري الدولي CIB">
+                        </div>
+                        <div class="monetization-input-group">
+                            <label style="color: #b0bec5; font-size: 0.85rem; font-weight: 700;">اسم صاحب الحساب بالكامل:</label>
+                            <input type="text" id="bankAccountHolder" class="monetization-input" placeholder="الاسم الرباعي كما في البنك">
+                        </div>
+                    </div>
+                    <div class="monetization-input-group" style="margin-top: 8px;">
+                        <label style="color: #b0bec5; font-size: 0.85rem; font-weight: 700;">رقم الحساب المصرفي الدولي (IBAN):</label>
+                        <input type="text" id="bankIBAN" class="monetization-input" placeholder="EG123456789012345678901234567" style="font-family: monospace; direction: ltr; letter-spacing: 1px; font-size: 1rem;">
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px;">
+                        <div class="monetization-input-group">
+                            <label style="color: #b0bec5; font-size: 0.85rem; font-weight: 700;">رمز السويفت (SWIFT / BIC Code):</label>
+                            <input type="text" id="bankSWIFT" class="monetization-input" placeholder="مثال: CIBEEGCX" style="text-transform: uppercase; font-family: monospace;">
+                        </div>
+                        <div class="monetization-input-group">
+                            <label style="color: #b0bec5; font-size: 0.85rem; font-weight: 700;">الدولة والمدينة:</label>
+                            <input type="text" id="bankCountryCity" class="monetization-input" placeholder="مثال: مصر - القاهرة">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- نموذج بنوك ومحافظ إلكترونية أخرى -->
+                <div id="withdrawForm_other" class="method-form-box" style="display: none;">
+                    <div style="background: rgba(156, 39, 176, 0.1); border: 1px solid rgba(156, 39, 176, 0.3); border-radius: 10px; padding: 10px; margin-bottom: 10px; font-size: 0.85rem; color: #e1bee7;">
+                        🌐 <strong>بنوك ومحافظ إلكترونية:</strong> يمكنك السحب عبر بايونير، وايز، سكريل، أو المحافظ المحلية (فودافون كاش / انستاباي / البريد).
+                    </div>
+                    <div class="monetization-input-group">
+                        <label style="color: #b0bec5; font-size: 0.85rem; font-weight: 700;">اختر منصة التحويل أو المحفظة:</label>
+                        <select id="otherPlatformSelect" class="monetization-input" style="font-family: inherit;">
+                            <option value="payoneer">بايونير (Payoneer) - بريد الحساب</option>
+                            <option value="wise">وايز (Wise) - بريد أو IBAN</option>
+                            <option value="vodafone_cash">فودافون كاش / انستاباي (مصر)</option>
+                            <option value="baridimob">بريدي موب (BaridiMob الجزائر)</option>
+                            <option value="cih_bank">بنك CIH / التجاري وفا بنك (المغرب)</option>
+                            <option value="stc_pay">STC Pay / يورباي (السعودية)</option>
+                            <option value="skrill">سكريل (Skrill)</option>
+                            <option value="perfect_money">بيرفكت موني (Perfect Money USD)</option>
+                        </select>
+                    </div>
+                    <div class="monetization-input-group" style="margin-top: 8px;">
+                        <label style="color: #b0bec5; font-size: 0.85rem; font-weight: 700;">رقم الحساب / البريد / رقم المحفظة أو الهاتف:</label>
+                        <input type="text" id="otherAccountId" class="monetization-input" placeholder="أدخل رقم المحفظة أو البريد الإلكتروني..." style="direction: ltr;">
+                    </div>
+                    <div class="monetization-input-group" style="margin-top: 8px;">
+                        <label style="color: #b0bec5; font-size: 0.85rem; font-weight: 700;">اسم صاحب الحساب أو المحفظة بالكامل:</label>
+                        <input type="text" id="otherHolderName" class="monetization-input" placeholder="الاسم الثلاثي أو الرباعي">
+                    </div>
+                </div>
+
+                <!-- تأكيد الأمان والشروط -->
+                <div style="background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 10px; padding: 10px 14px; margin-top: 12px; font-size: 0.82rem; color: #b0bec5; text-align: right; line-height: 1.5;">
+                    🛡️ <strong>ضمان الأمان والخصوصية:</strong> جميع عمليات التحويل مشفرة ومؤمنة بالكامل بجدار حماية WAF. لن نطلب منك أبداً الرمز السري أو CVV الخاص ببطاقتك.
+                </div>
+
+                <!-- زر الإرسال -->
+                <div class="btn-group" style="width: 100%; margin-top: 14px;">
+                    <button type="button" id="btnSubmitWithdrawal" class="btn-action" style="width: 100%; justify-content: center; font-size: 1.1rem; padding: 12px 20px; background: linear-gradient(135deg, #00c853, #1b5e20); box-shadow: 0 4px 16px rgba(0, 200, 83, 0.35);">
+                        💸 تأكيد طلب السحب وتحويل النقاط
+                    </button>
+                </div>
+            </div>
+
+            <!-- 2. قسم سجل السحوبات -->
+            <div id="withdrawHistorySection" style="display: none; width: 100%;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                    <h3 style="color: #ffd700; font-size: 1.15rem; margin: 0; text-align: right;">📜 سجل طلبات السحب الخاصة بك:</h3>
+                    <button type="button" class="btn-secondary" style="font-size: 0.78rem; padding: 4px 10px;" onclick="window.withdrawalManager.renderHistory()">🔄 تحديث السجل</button>
+                </div>
+                <div id="withdrawHistoryList">
+                    <!-- يتم توليده برمجياً -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- نافذة تأكيد استبدال القسيمة (Redeem Confirm Modal) -->
+    <div id="redeemConfirmModal" class="modal-overlay">
+        <div class="modal-content" style="max-width: 500px;">
+            <div style="font-size: 3rem;">💎</div>
+            <h2 class="modal-title gold" style="font-size: 1.5rem;">تأكيد طلب الشحن المباشر</h2>
+            
+            <div style="background: rgba(0,0,0,0.3); padding: 14px; border-radius: 12px; width: 100%; text-align: right;">
+                <div id="confirmVoucherGame" style="display: inline-block; background: #e91e63; color: #fff; padding: 2px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: 800; margin-bottom: 6px;">لعبة</div>
+                <div id="confirmVoucherTitle" style="font-size: 1.2rem; font-weight: 900; color: #fff;">100 جوهرة فري فاير</div>
+                <div style="color: #ffd54f; font-weight: 800; margin-top: 4px;">النقاط المطلوبة: <span id="confirmVoucherCost">50,000 نقطة</span></div>
+            </div>
+
+            <div class="monetization-input-group">
+                <label style="font-weight: 700; color: #b0bec5; font-size: 0.95rem;">
+                    أدخل معرف حساب اللاعب (Player ID / UID):
+                </label>
+                <input type="text" id="redeemPlayerIdInput" class="monetization-input" placeholder="مثال: 1234567890" maxlength="25">
+                <small style="color: #90a4ae;">تأكد من كتابة الـ ID بدقة؛ سيقوم مدير اللعبة بشحن الجواهر إلى حسابك مباشرة.</small>
+            </div>
+
+            <div class="btn-group" style="width: 100%;">
+                <button id="btnConfirmRedeem" class="btn-action" style="flex: 1; justify-content: center; background: linear-gradient(135deg, #4caf50, #2e7d32);">
+                    ✅ تأكيد الطلب وخصم النقاط
+                </button>
+                <button id="btnCancelRedeem" class="btn-secondary">
+                    إلغاء
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- نافذة نجاح الاستبدال (Voucher Success Modal - Direct ID Top-up) -->
+    <div id="voucherSuccessModal" class="modal-overlay">
+        <div class="modal-content" style="max-width: 520px;">
+            <div style="font-size: 3.5rem; animation: bounce 1.2s infinite alternate;">🎉</div>
+            <h2 class="modal-title gold" style="font-size: 1.6rem;">تم استلام طلب الشحن بنجاح! 🚀</h2>
+            
+            <!-- رسالة النجاح الإلزامية الصريحة -->
+            <div style="background: linear-gradient(135deg, rgba(255,152,0,0.18), rgba(255,87,34,0.12)); border: 2px solid #ff9800; border-radius: 14px; padding: 16px; margin: 12px 0; text-align: center; width: 100%;">
+                <div style="font-size: 2.2rem; margin-bottom: 6px;">⏳✨</div>
+                <div id="successNoticeMessage" style="color: #ffe082; font-size: 1.05rem; font-weight: 900; line-height: 1.8;">
+                    تم استلام طلبك بنجاح. سيتم مراجعة الطلب وشحن الجواهر إلى حسابك يدوياً خلال 24 إلى 48 ساعة.
+                </div>
+            </div>
+
+            <!-- تفاصيل الطلب المسجل -->
+            <div style="background: rgba(0,0,0,0.35); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 14px; width: 100%; text-align: right; font-size: 0.9rem;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                    <span style="color: #b0bec5;">رقم الطلب:</span>
+                    <span id="successOrderId" style="color: #ffd700; font-weight: 800; font-family: monospace;">ORD-XXXXXX</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                    <span style="color: #b0bec5;">نوع اللعبة:</span>
+                    <span id="successGameTitle" style="color: #fff; font-weight: 700;">فري فاير</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                    <span style="color: #b0bec5;">اسم الباقة المطلوبة:</span>
+                    <span id="successVoucherTitle" style="color: #81c784; font-weight: 800;">100 جوهرة فري فاير 💎</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                    <span style="color: #b0bec5;">معرف اللاعب (Player ID):</span>
+                    <span id="successPlayerId" style="color: #00e5ff; font-weight: 800; font-family: monospace; direction: ltr;">12345678</span>
+                </div>
+                <div style="display: flex; justify-content: space-between;">
+                    <span style="color: #b0bec5;">حالة الطلب:</span>
+                    <span id="successOrderStatus" class="order-status-badge pending">⏳ قيد الانتظار (Pending)</span>
+                </div>
+            </div>
+
+            <div style="color: #90a4ae; font-size: 0.82rem; text-align: center; margin-top: 8px;">
+                💡 يمكنك متابعة حالة طلبك في أي وقت عبر تبويب <strong>"سجل قسائمي وطلباتي"</strong>.
+            </div>
+
+            <div class="btn-group" style="width: 100%; margin-top: 14px;">
+                <button id="btnCloseSuccessVoucher" class="btn-action" style="width: 100%; justify-content: center; background: linear-gradient(135deg, #ff9800, #f57c00);">
+                    حسناً، فهمت 👍
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- نافذة من نحن About Us Modal -->
+    <div id="aboutUsModal" class="modal-overlay">
+        <div class="modal-content" style="max-width: 640px; max-height: 90vh; overflow-y: auto;">
+            <div style="font-size: 3.2rem;">🐔ℹ️</div>
+            <h2 class="modal-title gold">من نحن - مغامرة الدجاجة كوكو</h2>
+            
+            <div class="about-hero-box">
+                <p style="font-size: 1.05rem; line-height: 1.7; color: #eceff1; margin-bottom: 12px;">
+                    نحن فريق تطوير ألعاب ويب عربي شغوف بابتكار تجارب ألعاب تجمع بين <strong>التحدي المثير، والرسوم الجذابة، والمكافآت الحقيقية</strong> للاعبين المتميزين.
+                </p>
+                <div class="about-badges-row">
+                    <span class="stat-badge">🎮 15 مستوًى تفاعلياً ومميزاً</span>
+                    <span class="stat-badge">🎁 قسائم ألعاب حقيقية</span>
+                    <span class="stat-badge">⚡ 100% مجانية للجميع</span>
+                </div>
+            </div>
+
+            <div class="about-cards-grid">
+                <div class="about-card">
+                    <div class="about-card-icon">🎯</div>
+                    <div class="about-card-title">رؤيتنا وهدفنا</div>
+                    <div class="about-card-desc">
+                        تقديم ألعاب عربية خفيفة وسريعة تعمل على أي متصفح هاتف أو حاسوب دون الحاجة لتحميل تطبيقات ثقيلة، ومكافأة وقت ومهارة اللاعبين بقسائم شحن وجواهر.
+                    </div>
+                </div>
+
+                <div class="about-card">
+                    <div class="about-card-icon">💎</div>
+                    <div class="about-card-title">نظام المكافآت الحقيقي</div>
+                    <div class="about-card-desc">
+                        كل مرحلة تتخطاها تمنحك نقاطاً حقيقية يمكنك استبدالها فوراً بجواهر فري فاير (Free Fire) وشدات ببجي (PUBG Mobile) وبطاقات Google Play مجاناً.
+                    </div>
+                </div>
+
+                <div class="about-card">
+                    <div class="about-card-icon">🤝</div>
+                    <div class="about-card-title">الشفافية والدعم</div>
+                    <div class="about-card-desc">
+                        يتم تمويل اللعبة وتوزيع الجوائز بالكامل عبر شراكات الإعلانات ودعم المتابعين. اشتراكك في قنواتنا هو ما يبقي اللعبة مجانية ومستمرة للجميع!
+                    </div>
+                </div>
+
+                <div class="about-card">
+                    <div class="about-card-icon">🛡️</div>
+                    <div class="about-card-title">الأمان والخصوصية</div>
+                    <div class="about-card-desc">
+                        لا نطلب أبداً كلمات سر حساباتك. نحتاج فقط إلى معرف اللاعب (Player ID) لنرسل لك الشحن عبر الموزعين الرسميين المعتمدين فوراً.
+                    </div>
+                </div>
+            </div>
+
+            <div class="btn-group" style="width: 100%;">
+                <button id="btnCloseAboutModal" class="btn-action" style="width: 100%; justify-content: center;">
+                    رجوع للعبة 🔙
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- نافذة مواقع التواصل الاجتماعي Social Media Modal -->
+    <div id="socialMediaModal" class="modal-overlay">
+        <div class="modal-content" style="max-width: 660px; max-height: 90vh; overflow-y: auto;">
+            <div style="font-size: 3rem;">🌐✨</div>
+            <h2 class="modal-title gold">مواقع التواصل الرسمية</h2>
+            <p class="modal-text" style="font-size: 0.95rem;">
+                تابعنا على منصاتنا الرسمية للحصول على أكواد شحن مجانية يومية، أخبار التحديثات، والتفاعل مع مجتمع اللاعبين!
+            </p>
+
+            <div class="social-grid">
+                <!-- YouTube -->
+                <div class="social-card yt">
+                    <div class="social-header">
+                        <span class="social-icon">🔴</span>
+                        <div>
+                            <div class="social-name">قناة يوتيوب الرسمية</div>
+                            <div class="social-sub">فيديوهات شروحات وبثوث وتوزيع أكواد</div>
+                        </div>
+                    </div>
+                    <a id="socialLinkYoutube" href="https://www.youtube.com" target="_blank" class="social-btn yt-btn">
+                        اشترك الآن 🔔
+                    </a>
+                </div>
+
+                <!-- Telegram -->
+                <div class="social-card tg">
+                    <div class="social-header">
+                        <span class="social-icon">✈️</span>
+                        <div>
+                            <div class="social-name">قناة التليجرام</div>
+                            <div class="social-sub">توزيع أكواد يومية وتنبيهات فورية</div>
+                        </div>
+                    </div>
+                    <a id="socialLinkTelegram" href="https://t.me" target="_blank" class="social-btn tg-btn">
+                        انضم للقناة 🚀
+                    </a>
+                </div>
+
+                <!-- TikTok -->
+                <div class="social-card tt">
+                    <div class="social-header">
+                        <span class="social-icon">🎵</span>
+                        <div>
+                            <div class="social-name">تيك توك (TikTok)</div>
+                            <div class="social-sub">أقوى لقطات الهروب وتحديات السرعة</div>
+                        </div>
+                    </div>
+                    <a id="socialLinkTiktok" href="https://www.tiktok.com" target="_blank" class="social-btn tt-btn">
+                        متابعة الحساب 🎬
+                    </a>
+                </div>
+
+                <!-- Facebook -->
+                <div class="social-card fb">
+                    <div class="social-header">
+                        <span class="social-icon">📘</span>
+                        <div>
+                            <div class="social-name">صفحة فيسبوك</div>
+                            <div class="social-sub">مسابقات أسبوعية ومجتمع الأبطال</div>
+                        </div>
+                    </div>
+                    <a id="socialLinkFacebook" href="https://www.facebook.com" target="_blank" class="social-btn fb-btn">
+                        تسجيل إعجاب 👍
+                    </a>
+                </div>
+
+                <!-- Instagram -->
+                <div class="social-card ig">
+                    <div class="social-header">
+                        <span class="social-icon">📸</span>
+                        <div>
+                            <div class="social-name">إنستغرام (Instagram)</div>
+                            <div class="social-sub">كواليس التحديثات وصور المراحل القادمة</div>
+                        </div>
+                    </div>
+                    <a id="socialLinkInstagram" href="https://www.instagram.com" target="_blank" class="social-btn ig-btn">
+                        تابعنا 📷
+                    </a>
+                </div>
+
+                <!-- Discord -->
+                <div class="social-card dc">
+                    <div class="social-header">
+                        <span class="social-icon">💬</span>
+                        <div>
+                            <div class="social-name">سيرفر ديسكورد (Discord)</div>
+                            <div class="social-sub">دردشة صوتية وتبادل استراتيجيات الفوز</div>
+                        </div>
+                    </div>
+                    <a id="socialLinkDiscord" href="https://discord.com" target="_blank" class="social-btn dc-btn">
+                        دخول السيرفر 🎧
+                    </a>
+                </div>
+            </div>
+
+            <div class="btn-group" style="width: 100%; margin-top: 6px;">
+                <button id="btnCloseSocialModal" class="btn-secondary" style="width: 100%;">
+                    إغلاق
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- نافذة شرط الاشتراك الإلزامي Mandatory Channel Subscription Modal -->
+    <div id="mandatorySubModal" class="modal-overlay">
+        <div class="modal-content mandatory-sub-box" style="max-width: 580px;">
+            <div class="sub-pulse-icon">🔔</div>
+            <div class="mandatory-badge">⚠️ شرط إلزامي لتفعيل اللعبة واستلام الجوائز</div>
+            <h2 class="modal-title gold" style="font-size: 1.6rem;">اشترك في قناتنا الرسمية للبدء</h2>
+            
+            <p class="modal-text" style="font-size: 0.95rem; line-height: 1.6;">
+                أهلاً بك يا بطل! لضمان تشغيل اللعبة مجاناً وحفظ تقدمك وتفعيل استبدال قسائم الجواهر والشدات، <strong>يلزمك الاشتراك في قناتنا الرسمية</strong>. الخطوة تستغرق 3 ثوانٍ فقط لمرة واحدة!
+            </p>
+
+            <!-- بطاقة القناة المستهدفة -->
+            <div class="target-channel-card">
+                <span id="mandatoryChannelIcon" class="target-channel-icon">📺</span>
+                <div class="target-channel-info">
+                    <div id="mandatoryChannelBadge" class="target-channel-badge">قناة اليوتيوب الرسمية 🔴</div>
+                    <div id="mandatoryChannelName" class="target-channel-title">القناة الرسمية للعبة كوكو والأفخاخ 🐔</div>
+                    <div style="margin: 4px 0;">
+                        <span style="font-size: 0.78rem; color: #ffd54f;">رابط القناة: </span>
+                        <a id="mandatoryChannelUrlDisplay" href="https://www.youtube.com/c/FORJAmoutawakil" target="_blank" rel="noopener noreferrer" style="color: #4fc3f7; font-size: 0.85rem; text-decoration: underline; direction: ltr; display: inline-block; word-break: break-all;">https://www.youtube.com/c/FORJAmoutawakil</a>
+                    </div>
+                    <div class="target-channel-desc">المصدر الرسمي الحصري لأكواد وتوزيع شدات وجواهر الألعاب مجاناً</div>
+                </div>
+            </div>
+
+            <!-- خطوات الاشتراك التفاعلية -->
+            <div class="sub-steps-container">
+                <button id="btnMandatoryGoSub" class="sub-step-btn step-1">
+                    1️⃣ اضغط هنا للاشتراك في القناة الرسمية 🔔
+                </button>
+
+                <button id="btnMandatoryVerify" class="sub-step-btn step-2" disabled>
+                    2️⃣ اضغط هنا للتحقق وتفعيل اللعبة فوراً (بعد الاشتراك) ✅
+                </button>
+            </div>
+
+            <!-- مؤشر التحقق التفاعلي -->
+            <div id="mandatorySubProgress" class="mandatory-progress-box" style="display: none; width: 100%;">
+                <div class="mandatory-progress-track">
+                    <div id="mandatoryProgressBar" class="mandatory-progress-fill"></div>
+                </div>
+                <div id="mandatoryStatusText" class="mandatory-status-text">جاري التحقق من الاشتراك... ⏳</div>
+            </div>
+
+            <div class="btn-group" style="width: 100%; margin-top: 8px;">
+                <button id="btnCloseMandatorySub" class="btn-secondary" style="font-size: 0.85rem; padding: 6px 14px;">
+                    إلغاء والعودة
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- نافذة نظام دعوة الأصدقاء Referral & Invite Modal -->
+    <div id="referralModal" class="modal-overlay">
+        <div class="modal-content referral-modal-box" style="max-width: 580px;">
+            <div style="font-size: 3rem; animation: pulse 1.8s infinite;">👥</div>
+            <div class="referral-badge" style="background: rgba(142, 36, 170, 0.2); border: 1px solid #ab47bc; color: #e1bee7; padding: 4px 14px; border-radius: 20px; font-size: 0.85rem; font-weight: 800;">
+                🎁 برنامج المكافآت ودعوة الأصدقاء
+            </div>
+            
+            <h2 class="modal-title gold" style="font-size: 1.6rem; margin: 0;">ادعُ أصدقاءك واربح النقاط ⭐</h2>
+            
+            <p class="modal-text" style="font-size: 0.95rem; line-height: 1.6; margin: 0;">
+                شارك رابطك الخاص مع أصدقائك! عند دخول أي صديق جديد للعبة، <strong>ستحصل على 500 نقطة</strong> ويحصل صديقك أيضاً على <strong>500 نقطة هدية ترحيبية</strong> فوراً لاستبدالها بقسائم الشحن وسحب الكاش!
+            </p>
+
+            <!-- بطاقة كود ورابط اللاعب الفريد -->
+            <div style="background: rgba(0, 0, 0, 0.4); border: 2px solid rgba(171, 71, 188, 0.5); border-radius: 16px; padding: 14px; width: 100%; text-align: right;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; flex-wrap: wrap; gap: 6px;">
+                    <span style="color: #b0bec5; font-size: 0.85rem; font-weight: 700;">كود الدعوة الفريد الخاص بك:</span>
+                    <span id="refPlayerCodeDisplay" style="background: linear-gradient(135deg, #ffd700, #ff9800); color: #000; font-weight: 900; font-size: 1rem; padding: 3px 12px; border-radius: 8px; letter-spacing: 1px;">COCO-XXXXX</span>
+                </div>
+
+                <div style="display: flex; gap: 8px; margin-top: 6px;">
+                    <input type="text" id="refLinkInput" readonly style="flex: 1; direction: ltr; font-size: 0.85rem; padding: 8px 12px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.2); background: rgba(15, 18, 25, 0.9); color: #4fc3f7; font-weight: 600;" value="جاري إنشاء الرابط...">
+                    <button id="btnCopyRefLink" class="btn-action" style="background: linear-gradient(135deg, #ab47bc, #7b1fa2); padding: 8px 16px; font-size: 0.9rem; font-weight: 800; white-space: nowrap;">
+                        📋 نسخ الرابط
+                    </button>
+                </div>
+
+                <!-- أزرار المشاركة السريعة -->
+                <div style="display: flex; gap: 8px; margin-top: 10px; justify-content: center; flex-wrap: wrap;">
+                    <button id="btnShareRefWhatsapp" class="btn-secondary" style="border-color: #25d366; color: #25d366; font-size: 0.82rem; padding: 6px 12px;">
+                        🟢 واتساب
+                    </button>
+                    <button id="btnShareRefTelegram" class="btn-secondary" style="border-color: #0088cc; color: #29b6f6; font-size: 0.82rem; padding: 6px 12px;">
+                        ✈️ تليجرام
+                    </button>
+                    <button id="btnShareRefNative" class="btn-secondary" style="border-color: #ffd700; color: #ffd700; font-size: 0.82rem; padding: 6px 12px;">
+                        📲 مشاركة سريعة
+                    </button>
+                </div>
+            </div>
+
+            <!-- إحصائيات الإحالة -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%;">
+                <div style="background: rgba(0, 0, 0, 0.35); border: 1px solid rgba(255, 215, 0, 0.3); border-radius: 12px; padding: 10px; text-align: center;">
+                    <div style="font-size: 1.4rem;">👥</div>
+                    <div style="color: #b0bec5; font-size: 0.8rem; font-weight: 700;">أصدقاء انضموا عبرك</div>
+                    <div id="refStatsFriendsCount" style="color: #ffd54f; font-size: 1.4rem; font-weight: 900; margin-top: 2px;">0</div>
+                </div>
+                <div style="background: rgba(0, 0, 0, 0.35); border: 1px solid rgba(76, 175, 80, 0.4); border-radius: 12px; padding: 10px; text-align: center;">
+                    <div style="font-size: 1.4rem;">⭐</div>
+                    <div style="color: #b0bec5; font-size: 0.8rem; font-weight: 700;">نقاط أرباح الإحالات</div>
+                    <div id="refStatsTotalPoints" style="color: #81c784; font-size: 1.4rem; font-weight: 900; margin-top: 2px;">0</div>
+                </div>
+            </div>
+
+            <!-- قسم إدخال كود صديق يدوي -->
+            <div id="refClaimCodeBox" style="background: rgba(255, 255, 255, 0.04); border: 1px dashed rgba(255, 255, 255, 0.2); border-radius: 14px; padding: 12px; width: 100%; text-align: right;">
+                <label style="color: #cfd8dc; font-size: 0.82rem; font-weight: 700; display: block; margin-bottom: 6px;">هل دعاك صديق للعبة؟ أدخل كوده هنا لتحصل فوراً على 500 نقطة:</label>
+                <div style="display: flex; gap: 8px;">
+                    <input type="text" id="refFriendCodeInput" placeholder="مثال: COCO-XXXXX" style="flex: 1; text-align: center; text-transform: uppercase; font-size: 0.95rem; font-weight: 800; padding: 7px 10px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.2); background: rgba(0, 0, 0, 0.4); color: #fff;">
+                    <button id="btnClaimFriendCode" class="btn-action" style="background: linear-gradient(135deg, #00c853, #2e7d32); font-size: 0.85rem; padding: 7px 14px; white-space: nowrap;">
+                        تفعيل الهدية 🎁
+                    </button>
+                </div>
+                <div id="refClaimStatusMsg" style="display: none; margin-top: 6px; font-size: 0.82rem; font-weight: 700;"></div>
+            </div>
+
+            <div class="btn-group" style="width: 100%; margin-top: 4px;">
+                <button id="btnCloseReferralModal" class="btn-secondary" style="width: 100%; padding: 8px 16px;">
+                    إغلاق
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- نافذة منع حاجب الإعلانات Anti-AdBlock Modal -->
+    <div id="adblockModal" class="adblock-overlay">
+        <div class="adblock-modal-content">
+            <div class="adblock-icon-wrapper">
+                <span class="adblock-shield-icon">🛡️</span>
+                <span class="adblock-ban-icon">🚫</span>
+            </div>
+            
+            <h1 class="modal-title danger" style="font-size: 1.8rem;">تم اكتشاف مانع الإعلانات!</h1>
+            <div class="adblock-tag">AdBlock / Brave Shields Detected</div>
+
+            <p class="modal-text" style="font-size: 1rem; line-height: 1.7; color: #eceff1;">
+                أخي اللاعب العزيز، لقد لاحظنا أنك تستخدم برنامج حجب الإعلانات في متصفحك.
+                <br>
+                <strong style="color: #ffd54f;">لعبة مغامرة كوكو مجانية 100%</strong> ونحن نقوم بشراء وتوزيع قسائم شحن فري فاير وببجي للاعبين مجاناً، والإعلانات هي المصدر الوحيد الذي يدفع تكاليف السيرفرات وشحن الجواهر للاعبين!
+            </p>
+
+            <div class="adblock-steps-guide">
+                <div class="adblock-guide-title">💡 كيفية تعطيل مانع الإعلانات في ثوانٍ:</div>
+                <div class="adblock-step-item">
+                    <span class="adblock-step-num">1</span>
+                    <span>انقر على أيقونة مانع الإعلانات (AdBlock / uBlock / درع Brave) في شريط المتصفح العلوي.</span>
+                </div>
+                <div class="adblock-step-item">
+                    <span class="adblock-step-num">2</span>
+                    <span>اختر <strong>"إيقاف مؤقت على هذا الموقع"</strong> أو "تعطيل الحماية هنا".</span>
+                </div>
+                <div class="adblock-step-item">
+                    <span class="adblock-step-num">3</span>
+                    <span>اضغط على الزر الأخضر أدناه لإعادة الفحص ومتابعة اللعب فوراً.</span>
+                </div>
+            </div>
+
+            <button id="btnAdblockRecheck" class="btn-action adblock-btn">
+                🔄 لقد قمت بتعطيل مانع الإعلانات - إعادة الفحص واللعب الآن
+            </button>
+        </div>
+    </div>
+
+    <!-- نافذة تسجيل الدخول وإنشاء حساب موثق Auth Modal -->
+    <div id="authModal" class="modal-overlay">
+        <div class="modal-content" style="max-width: 520px; max-height: 90vh; overflow-y: auto;">
+            <div style="font-size: 3rem;">🛡️👤</div>
+            <h2 class="modal-title gold" style="font-size: 1.6rem;">بوابة الحسابات الموثقة</h2>
+            <p class="modal-text" style="font-size: 0.92rem; margin-top: -6px;">
+                قم بتسجيل الدخول أو إنشاء حساب ببريد حقيقي لحماية نقاطك وقسائم الشحن الخاصة بك من الضياع أو السرقة!
+            </p>
+
+            <!-- تبويبات التبديل -->
+            <div class="auth-tabs">
+                <button class="auth-tab-btn active" data-auth-tab="login">تسجيل الدخول 🔑</button>
+                <button class="auth-tab-btn" data-auth-tab="register">إنشاء حساب جديد 📝</button>
+            </div>
+
+            <!-- قسم 1: تسجيل الدخول -->
+            <div id="authLoginSection" style="width: 100%;">
+                <div class="monetization-input-group">
+                    <label style="color: #b0bec5; font-size: 0.88rem; font-weight: 700;">البريد الإلكتروني:</label>
+                    <input type="email" id="loginEmail" class="monetization-input" placeholder="name@example.com" autocomplete="email">
+                </div>
+                <div class="monetization-input-group" style="margin-top: 8px;">
+                    <label style="color: #b0bec5; font-size: 0.88rem; font-weight: 700;">كلمة المرور:</label>
+                    <input type="password" id="loginPassword" class="monetization-input" placeholder="••••••••" autocomplete="current-password">
+                </div>
+                <button id="btnSubmitLogin" class="btn-action" style="width: 100%; justify-content: center; margin-top: 14px; font-size: 1.05rem;">
+                    تسجيل الدخول الآمن 🚀
+                </button>
+            </div>
+
+            <!-- قسم 2: إنشاء حساب جديد وموثق -->
+            <div id="authRegisterSection" style="display: none; width: 100%;">
+                <!-- حقل الطعم المخفي لكشف وصيد الروبوتات (Honeypot Trap Field) -->
+                <input type="text" id="regHoneypotField" name="company_website_url_hp" style="display: none !important; position: absolute !important; left: -9999px !important;" tabindex="-1" autocomplete="off">
+
+                <div class="monetization-input-group">
+                    <label style="color: #b0bec5; font-size: 0.88rem; font-weight: 700;">اسم اللاعب / المستخدم:</label>
+                    <input type="text" id="regUsername" class="monetization-input" placeholder="مثال: البطل كوكو" maxlength="20" autocomplete="username">
+                </div>
+
+                <div class="monetization-input-group" style="margin-top: 8px;">
+                    <label style="color: #b0bec5; font-size: 0.88rem; font-weight: 700;">البريد الإلكتروني الحقيقي (يُمنع المؤقت):</label>
+                    <input type="email" id="regEmail" class="monetization-input" placeholder="name@gmail.com" autocomplete="email">
+                    <small style="color: #81c784; font-size: 0.78rem;">🛡️ محمي ضد البريد الوهمي والمؤقت لضمان أمان قسائم الشحن وتأكيد هويتك.</small>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px;">
+                    <div class="monetization-input-group">
+                        <label style="color: #b0bec5; font-size: 0.85rem; font-weight: 700;">كلمة المرور:</label>
+                        <input type="password" id="regPassword" class="monetization-input" placeholder="6 خانات فأكثر" autocomplete="new-password">
+                    </div>
+                    <div class="monetization-input-group">
+                        <label style="color: #b0bec5; font-size: 0.85rem; font-weight: 700;">تأكيد كلمة المرور:</label>
+                        <input type="password" id="regPasswordConfirm" class="monetization-input" placeholder="إعادة الكلمة" autocomplete="new-password">
+                    </div>
+                </div>
+
+                <!-- اختبار كابتشا الأمان المانع للروبوتات (Interactive Anti-Bot CAPTCHA) -->
+                <div class="captcha-box-container">
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
+                        <span style="font-size: 0.85rem; font-weight: 800; color: #ffd54f;">🔒 اختبار الأمان ضد الروبوتات (CAPTCHA):</span>
+                        <button type="button" id="btnRefreshCaptcha" class="btn-secondary" style="padding: 2px 8px; font-size: 0.78rem;" title="توليد رمز جديد">🔄 تغيير</button>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <canvas id="securityCaptchaCanvas" width="160" height="42" class="captcha-canvas" title="كود الكابتشا المشوش بصرياً"></canvas>
+                        <input type="text" id="regCaptchaInput" class="monetization-input" placeholder="اكتب الرمز..." maxlength="6" style="text-align: center; letter-spacing: 3px; font-weight: 900; font-size: 1.1rem; text-transform: uppercase;">
+                    </div>
+                </div>
+
+                <button id="btnSubmitRegister" class="btn-action" style="width: 100%; justify-content: center; margin-top: 14px; font-size: 1.05rem; background: linear-gradient(135deg, #4caf50, #2e7d32);">
+                    إنشاء الحساب والتحقق من البريد ✉️
+                </button>
+            </div>
+
+            <div class="btn-group" style="width: 100%; margin-top: 8px;">
+                <button id="btnCloseAuthModal" class="btn-secondary" style="width: 100%;">
+                    إلغاء
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- نافذة تأكيد كود البريد الإلكتروني OTP Modal -->
+    <div id="verifyEmailModal" class="modal-overlay">
+        <div class="modal-content" style="max-width: 480px;">
+            <div style="font-size: 3.2rem;">📧🔐</div>
+            <h2 class="modal-title gold" style="font-size: 1.5rem;">تأكيد ملكية البريد الإلكتروني</h2>
+            <p class="modal-text" style="font-size: 0.95rem;">
+                للتأكد من أن بريدك حقيقي وأنك لست روبوتاً، يرجى كتابة رمز التحقق السري المكون من 6 أرقام المرسل إلى:<br>
+                <strong id="otpTargetEmail" style="color: #29b6f6; direction: ltr; display: inline-block;">user@example.com</strong>
+            </p>
+
+            <div id="otpSimulationNotice" class="otp-security-box">
+                <!-- يتم توليد الرمز وإظهاره هنا لتسهيل تجربة النظام الفورية -->
+            </div>
+
+            <div class="monetization-input-group" style="width: 100%; margin-top: 10px;">
+                <input type="text" id="otpCodeInput" class="monetization-input" placeholder="• • • • • •" maxlength="6" style="text-align: center; letter-spacing: 6px; font-size: 1.5rem; font-weight: 900; font-family: monospace;">
+            </div>
+
+            <div class="btn-group" style="width: 100%; margin-top: 10px;">
+                <button id="btnSubmitOtpVerify" class="btn-action" style="flex: 1; justify-content: center; background: linear-gradient(135deg, #4caf50, #2e7d32);">
+                    ✅ تأكيد وتفعيل الحساب
+                </button>
+                <button id="btnCloseOtpModal" class="btn-secondary">
+                    إلغاء
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- نافذة الملف الشخصي للمستخدم User Profile Modal -->
+    <div id="userProfileModal" class="modal-overlay">
+        <div class="modal-content" style="max-width: 480px;">
+            <div class="profile-avatar-circle">🐔</div>
+            <div style="display: flex; align-items: center; gap: 6px;">
+                <h2 id="profileUsername" class="modal-title gold" style="font-size: 1.5rem;">البطل كوكو</h2>
+                <span class="verified-badge-large" title="حساب موثق رسمي">✅ موثق</span>
+            </div>
+            
+            <div class="profile-card-details">
+                <div class="profile-detail-row">
+                    <span class="detail-label">البريد الإلكتروني الموثق:</span>
+                    <span id="profileEmail" class="detail-value" style="direction: ltr;">user@example.com</span>
+                </div>
+                <div class="profile-detail-row">
+                    <span class="detail-label">تاريخ الانضمام:</span>
+                    <span id="profileJoinDate" class="detail-value">2026/10/27</span>
+                </div>
+                <div class="profile-detail-row">
+                    <span class="detail-label">رصيد النقاط المحمي:</span>
+                    <span id="profileScore" class="detail-value" style="color: #ffd700; font-weight: 900;">0 نقطة</span>
+                </div>
+                <div class="profile-detail-row">
+                    <span class="detail-label">حالة الأمان والحماية:</span>
+                    <span class="detail-value" style="color: #81c784;">🟢 محمي بجدار حماية WAF</span>
+                </div>
+            </div>
+
+            <div class="btn-group" style="width: 100%; margin-top: 8px;">
+                <button id="btnProfileLogout" class="btn-secondary" style="border-color: #f44336; color: #ff8a80;">
+                    تسجيل الخروج 🚪
+                </button>
+                <button id="btnCloseProfileModal" class="btn-action" style="flex: 1; justify-content: center;">
+                    إغلاق 👍
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- نافذة إدخال الرمز السري للوحة الإدارة (Admin Login Modal) المشفرة والمظلمة -->
+    <div id="adminPinModal" class="modal-overlay" style="display: none;">
+        <div class="modal-content admin-login-card" style="max-width: 440px; background: rgba(18, 20, 28, 0.98); border: 2px solid rgba(255, 215, 0, 0.45); border-radius: 20px; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.85); backdrop-filter: blur(14px); padding: 30px 24px; text-align: center;">
+            <div style="font-size: 3.2rem; margin-bottom: 8px;">🔐</div>
+            <h2 class="modal-title gold" style="font-size: 1.5rem; margin-bottom: 6px;">بوابة الإدارة المشفرة</h2>
+            <p class="modal-text" style="font-size: 0.9rem; color: #b0bec5; line-height: 1.6; margin-bottom: 20px;">
+                الوصول مقتصر حصرياً على مدير الموقع. النظام مشفر بتقنية <strong>SHA-256</strong> ومحمي بجدار حماية ضد التخمين.
+            </p>
+            <div class="monetization-input-group" style="margin-bottom: 18px;">
+                <input type="password" id="adminPinInput" class="monetization-input" placeholder="أدخل الرمز السري للإدارة..." autocomplete="current-password" style="text-align: center; letter-spacing: 3px; font-size: 1.25rem; padding: 14px 16px; border-radius: 12px; border: 2px solid rgba(255, 215, 0, 0.4); background: rgba(10, 12, 18, 0.9); color: #fff;">
+            </div>
+            <div class="btn-group" style="width: 100%; gap: 10px;">
+                <button id="btnSubmitAdminPin" class="btn-action" style="flex: 1; justify-content: center; padding: 12px 18px; font-size: 1rem; background: linear-gradient(135deg, #ffd700, #ff9800); color: #000; font-weight: 900; border-radius: 10px;">
+                    تسجيل الدخول 🔓
+                </button>
+                <button id="btnCloseAdminPin" class="btn-secondary" style="padding: 12px 18px; border-radius: 10px;">
+                    إلغاء
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- حاوية لوحة تحكم المدير الرئيسية (تُنشأ محتوياتها برمجياً وديناميكياً في DOM فقط بعد التحقق الناجح من كلمة المرور) -->
+    <div id="adminPanelModal" class="modal-overlay" style="display: none;"></div>
+
+    <!-- سكربتات اللعبة الموديلية -->
+    <script src="js/audio.js"></script>
+    <script src="js/entities.js"></script>
+    <script src="js/levels.js"></script>
+    <script src="js/security.js"></script>
+    <script src="js/admin.js"></script>
+    <script src="js/ads.js"></script>
+    <script src="js/features.js"></script>
+    <script src="js/vouchers.js"></script>
+    <script src="js/withdraw.js"></script>
+    <script src="js/referral.js"></script>
+    <script src="js/winners.js"></script>
+    <script src="js/dhikr.js"></script>
+    <script src="js/game.js"></script>
+    <script>
+        // تسجيل ومراقبة Service Worker للتشغيل كتطبيق PWA مع التحديث الفوري
+        if ('serviceWorker' in navigator && window.location.protocol.startsWith('http')) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js').then((reg) => {
+                    console.log('✅ PWA Service Worker جاهز للعمل دون اتصال');
+                    // فحص وجود إصدار جديد فوراً عند فتح التطبيق
+                    reg.update();
+                }).catch(err => console.log('SW error:', err));
+
+                // إعادة تحميل الصفحة تلقائياً عند استبدال الـ Service Worker بإصدار جديد
+                let refreshing = false;
+                navigator.serviceWorker.addEventListener('controllerchange', () => {
+                    if (!refreshing) {
+                        refreshing = true;
+                        window.location.reload();
+                    }
+                });
+            });
+        }
+    </script>
+</body>
+</html>

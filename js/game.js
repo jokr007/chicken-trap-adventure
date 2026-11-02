@@ -924,7 +924,7 @@ class ChickenGame {
     }
 
     drawBackground() {
-        const curLvl = window.GAME_LEVELS[this.currentLevelIndex];
+        const curLvl = (window.GAME_LEVELS && window.GAME_LEVELS[this.currentLevelIndex]) ? window.GAME_LEVELS[this.currentLevelIndex] : null;
         const theme = curLvl ? curLvl.theme : 'grass';
 
         if (theme === 'grass') {
@@ -1038,9 +1038,29 @@ class ChickenGame {
     }
 
     loop(timestamp) {
-        this.update();
-        this.draw();
+        try {
+            this.update();
+            this.draw();
+        } catch (err) {
+            console.error('⚠️ خطأ في حلقة اللعبة (Game Loop Error):', err);
+            this.drawCrashScreen(err);
+        }
         requestAnimationFrame((t) => this.loop(t));
+    }
+
+    drawCrashScreen(err) {
+        if (!this.ctx) return;
+        this.ctx.save();
+        this.ctx.fillStyle = '#111827';
+        this.ctx.fillRect(0, 0, this.mapWidth, this.mapHeight);
+        this.ctx.fillStyle = '#ef4444';
+        this.ctx.font = 'bold 22px Cairo, Tajawal, sans-serif';
+        this.ctx.textAlign = 'center';
+        this.ctx.fillText('⚠️ حدث خطأ أثناء تشغيل محرك اللعبة', this.mapWidth / 2, this.mapHeight / 2 - 20);
+        this.ctx.fillStyle = '#9ca3af';
+        this.ctx.font = '14px Cairo, Tajawal, sans-serif';
+        this.ctx.fillText(err ? (err.message || String(err)) : 'خطأ غير معروف', this.mapWidth / 2, this.mapHeight / 2 + 15);
+        this.ctx.restore();
     }
 
     // إدارة نوافذ الواجهة (Modals)
