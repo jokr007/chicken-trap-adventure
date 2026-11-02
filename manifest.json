@@ -1,25 +1,96 @@
 {
-  "name": "مغامرة الدجاجة والأفخاخ",
+  "name": "مغامرة الدجاجة والأفخاخ - كوكو",
   "short_name": "مغامرة كوكو",
-  "description": "لعبة مغامرات الدجاجة كوكو والهروب من الأفخاخ وجمع قسائم الشحن",
-  "start_url": "./index.html",
+  "description": "لعبة مغامرات وتحديات شيقة لتفادي الأفخاخ وجمع البيض الذهبي واستبدال النقاط بمكافآت وجوائز حقيقية.",
+  "id": "/?source=pwa",
+  "start_url": "./index.html?source=pwa",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#ff9800",
-  "theme_color": "#ff9800",
+  "display_override": [
+    "window-controls-overlay",
+    "standalone",
+    "minimal-ui"
+  ],
   "orientation": "any",
+  "background_color": "#0f172a",
+  "theme_color": "#ff9800",
+  "lang": "ar",
+  "dir": "rtl",
+  "categories": [
+    "games",
+    "entertainment",
+    "adventure"
+  ],
+  "prefer_related_applications": false,
+  "launch_handler": {
+    "client_mode": "navigate-existing"
+  },
   "icons": [
     {
       "src": "icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "icon-maskable-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
     },
     {
       "src": "icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "screenshot-desktop.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "واجهة اللعبة الرئيسية على الأجهزة المكتبية والكمبيوتر"
+    },
+    {
+      "src": "screenshot-mobile.png",
+      "sizes": "720x1280",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "مغامرة الدجاجة والأفخاخ على شاشات الهواتف الذكية"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "بدء المغامرة فوراً",
+      "short_name": "لعب",
+      "description": "الانطلاق المباشر في تفادي الأفخاخ وجمع البيض",
+      "url": "./index.html?action=play",
+      "icons": [
+        {
+          "src": "icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "لوحة الفائزين والمكافآت",
+      "short_name": "المتصدرين",
+      "description": "الاطلاع على المتصدرين واستبدال قسائم الشحن",
+      "url": "./index.html?action=winners",
+      "icons": [
+        {
+          "src": "icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
     }
   ]
 }

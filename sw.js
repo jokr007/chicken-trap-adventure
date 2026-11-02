@@ -10,10 +10,10 @@ try {
     console.warn('Monetag SW script bypassed or blocked by ad-blocker:', e);
 }
 
-// 2. إصدار الكاش المحدث لتخطي النسخ المعطوبة السابقة
-const CACHE_NAME = 'chicken-game-v4';
+// 2. إصدار الكاش المحدث لتخطي النسخ المعطوبة وتفعيل معايير المتاجر Store-Ready
+const CACHE_NAME = 'chicken-game-v5';
 
-// قائمة الأصول الفعلية الموجودة فقط (تم إزالة أيقونات غير موجودة لتفادي فشل التخزين)
+// قائمة أصول التطبيق PWA المعتمدة للتشغيل دون اتصال
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -21,6 +21,10 @@ const ASSETS_TO_CACHE = [
   './icon.svg',
   './icon-192.png',
   './icon-512.png',
+  './icon-maskable-192.png',
+  './icon-maskable-512.png',
+  './screenshot-desktop.png',
+  './screenshot-mobile.png',
   './css/style.css',
   './js/audio.js',
   './js/entities.js',
@@ -37,7 +41,7 @@ const ASSETS_TO_CACHE = [
   './js/game.js'
 ];
 
-// مرحلة التثبيت: تحميل وحفظ الأصول الأساسية
+// مرحلة التثبيت: تحميل الأصول الأساسية في الكاش
 self.addEventListener('install', (e) => {
   self.skipWaiting();
   e.waitUntil(
@@ -49,7 +53,7 @@ self.addEventListener('install', (e) => {
   );
 });
 
-// مرحلة التفعيل: مسح جميع الكاشات القديمة فوراً والتحكم في كل الصفحات المفتوحة
+// مرحلة التفعيل: مسح جميع الكاشات القديمة فوراً
 self.addEventListener('activate', (e) => {
   e.waitUntil(
     caches.keys().then((keys) => {
@@ -60,17 +64,17 @@ self.addEventListener('activate', (e) => {
   );
 });
 
-// مرحلة جلب الموارد: استراتيجية ذكية تمنع الشاشة السوداء والنسخ القديمة
+// مرحلة جلب الموارد: استراتيجية Network-First للـ HTML و Stale-While-Revalidate للملفات الثابتة
 self.addEventListener('fetch', (e) => {
   if (e.request.method !== 'GET') return;
   const url = new URL(e.request.url);
 
-  // تمرير طلبات شبكات الإعلانات والـ APIs الخارجية والجهات الخارجية دون كاش
+  // استثناء الإعلانات والروابط الخارجية
   if (url.origin !== self.location.origin || url.pathname.includes('/act/') || url.hostname.includes('google') || url.hostname.includes('alwingulla') || url.hostname.includes('5gvci')) {
     return;
   }
 
-  // أ. لصفحات التنقل ومستند HTML (Network-First): جلب أحدث نسخة دائماً، والرجوع للكاش فقط في حالة انقطاع الإنترنت
+  // 1. التنقل ومستند HTML (Network-First)
   if (e.request.mode === 'navigate' || url.pathname.endsWith('.html') || url.pathname === '/') {
     e.respondWith(
       fetch(e.request)
@@ -88,7 +92,7 @@ self.addEventListener('fetch', (e) => {
     return;
   }
 
-  // ب. للملفات الثابتة (Stale-While-Revalidate): إرجاع الكاش سريعاً وتحديثه في الخلفية
+  // 2. الملفات الثابتة (Stale-While-Revalidate)
   e.respondWith(
     caches.match(e.request).then((cachedResponse) => {
       const fetchPromise = fetch(e.request).then((networkResponse) => {
