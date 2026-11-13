@@ -130,7 +130,9 @@ class AdManager {
             try {
                 const adSlots = document.querySelectorAll('ins.adsbygoogle');
                 adSlots.forEach(slot => {
-                    if (!slot.getAttribute('data-adsbygoogle-status')) {
+                    // حماية جوهرية: عدم استدعاء push للفتحات المخفية لتجنب خطأ No slot size for availableWidth=0
+                    const isVisible = slot.offsetWidth > 0 || slot.offsetHeight > 0 || slot.offsetParent !== null;
+                    if (isVisible && !slot.getAttribute('data-adsbygoogle-status')) {
                         (window.adsbygoogle = window.adsbygoogle || []).push({});
                     }
                 });
@@ -231,34 +233,38 @@ class AdManager {
 
         this.isAdPlaying = true;
         const modal = document.getElementById('interstitialAdModal');
-        const countdownElem = document.getElementById('interstitialTimer');
         const skipBtn = document.getElementById('btnSkipInterstitial');
 
         if (skipBtn) {
             skipBtn.disabled = true;
             skipBtn.style.opacity = '0.5';
-            skipBtn.innerText = "يمكن التخطي بعد 3...";
+            skipBtn.innerHTML = `يمكن التخطي بعد (<span id="interstitialTimer">3</span>)...`;
             skipBtn.onclick = null;
         }
 
         if (modal) modal.style.display = 'flex';
 
         let timer = 3;
-        if (countdownElem) countdownElem.innerText = `${timer}`;
+        const countElem = document.getElementById('interstitialTimer');
+        if (countElem) countElem.innerText = `${timer}`;
 
         const interval = setInterval(() => {
             timer--;
-            if (countdownElem) countdownElem.innerText = `${Math.max(0, timer)}`;
-            if (skipBtn) skipBtn.innerText = timer > 0 ? `يمكن التخطي بعد ${timer}...` : "تخطي الإعلان ⏩";
+            const currentCountElem = document.getElementById('interstitialTimer');
+            if (currentCountElem) currentCountElem.innerText = `${Math.max(0, timer)}`;
 
-            if (timer <= 0) {
-                clearInterval(interval);
-                if (skipBtn) {
+            if (skipBtn) {
+                if (timer > 0) {
+                    skipBtn.innerHTML = `يمكن التخطي بعد (<span id="interstitialTimer">${timer}</span>)...`;
+                } else {
+                    skipBtn.innerHTML = "تخطي الإعلان ⏩";
                     skipBtn.disabled = false;
                     skipBtn.style.opacity = '1';
                 }
+            }
 
-                // تسجيل أرباح الإعلان
+            if (timer <= 0) {
+                clearInterval(interval);
                 this.recordImpression(false);
 
                 if (skipBtn) {
@@ -379,3 +385,40 @@ if (storedPubId && storedPubId.startsWith('ca-pub-')) {
     window.adManager.config.testMode = false;
     window.adManager.initGoogleAdSense();
 }
+
+// ==========================================
+// وظائف المساعدة العامة وربط الأحداث المباشرة
+// ==========================================
+
+// دالة مشاهدة إعلان للحصول على محاولة إضافية / إحياء الدجاجة
+window.watchAdForReward = function() {
+    if (window.adManager && window.game) {
+        window.adManager.showRewardedAd('REVIVE', () => {
+            if (window.game.player) {
+                window.game.player.lives = window.game.player.maxLives;
+                window.game.player.invulnerableTimer = 120;
+            }
+            window.game.state = 'PLAYING';
+            window.game.hideModals();
+            window.game.updateHUD();
+            if (window.game.player) {
+                window.game.addFloatingText("تمت النجاة واستعادة القلوب! ❤️", window.game.player.x, window.game.player.y - 20, '#4caf50');
+            }
+            if (window.soundEngine) window.soundEngine.playPowerup();
+        });
+    }
+};
+
+// دالة فتح متجر القسائم والتوافقية مع المسميات المختلفة
+window.openVoucherStore = function() {
+    if (window.voucherStore) {
+        window.voucherStore.renderStore();
+    }
+    const modal = document.getElementById('voucherStoreModal');
+    if (modal) modal.style.display = 'flex';
+};
+
+window.vouchersManager = {
+    openVoucherStore: window.openVoucherStore,
+    openStore: window.openVoucherStore
+};
