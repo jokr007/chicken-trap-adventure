@@ -95,7 +95,7 @@
                 <div class="sidebar-ad-icon">💎</div>
                 <div class="sidebar-ad-title">شحن فري فاير وببجي</div>
                 <div class="sidebar-ad-desc">أسرع شحن فوري بأسعار حصرية للاعبينا!</div>
-                <button class="sidebar-ad-btn" onclick="if(window.vouchersManager) window.vouchersManager.openVoucherStore();">اشحن الآن ⚡</button>
+                <button class="sidebar-ad-btn" onclick="if(window.voucherStore && window.voucherStore.openStore) window.voucherStore.openStore(); else if(window.openVoucherStore) window.openVoucherStore();">اشحن الآن ⚡</button>
             </div>
             <!-- كود Google AdSense الرسمي للبانر الجانبي -->
             <ins class="adsbygoogle"

@@ -71,8 +71,16 @@ class FeaturesManager {
         // فتح متجر القسائم
         navBtnVouchers?.addEventListener('click', () => {
             this.closeMobileMenu();
-            if (window.voucherStore) {
+            if (window.voucherStore && typeof window.voucherStore.openStore === 'function') {
                 window.voucherStore.openStore();
+            } else if (typeof window.openVoucherStore === 'function') {
+                window.openVoucherStore();
+            } else {
+                if (window.voucherStore && typeof window.voucherStore.renderStore === 'function') {
+                    window.voucherStore.renderStore();
+                }
+                const modal = document.getElementById('voucherStoreModal');
+                if (modal) modal.style.display = 'flex';
             }
         });
 

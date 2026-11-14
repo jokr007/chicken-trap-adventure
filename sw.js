@@ -10,8 +10,8 @@ try {
     console.warn('Monetag SW script bypassed or blocked by ad-blocker:', e);
 }
 
-// 2. إعدادات كاش اللعبة الأصلية PWA للتشغيل دون إنترنت (إصدار محدث v6)
-const CACHE_NAME = 'chicken-game-v6';
+// 2. إعدادات كاش اللعبة الأصلية PWA للتشغيل دون إنترنت (إصدار محدث v7)
+const CACHE_NAME = 'chicken-game-v7';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',

@@ -680,6 +680,10 @@ class ChickenGame {
             this.eggsCollected++;
             this.score += 500;
             this.levelScore += 500;
+            if (window.securityWAF) {
+                window.securityWAF.lastValidScore = this.score;
+                window.securityWAF.lastScoreHash = window.securityWAF.generateScoreHash(this.score);
+            }
             if (window.soundEngine) window.soundEngine.playCollectEgg();
             this.addFloatingText("+500 بيضة ذهبية!", item.x, item.y, '#ffd700');
 
@@ -692,6 +696,10 @@ class ChickenGame {
         } else if (item.type === 'CORN') {
             this.score += 100;
             this.levelScore += 100;
+            if (window.securityWAF) {
+                window.securityWAF.lastValidScore = this.score;
+                window.securityWAF.lastScoreHash = window.securityWAF.generateScoreHash(this.score);
+            }
             if (window.soundEngine) window.soundEngine.playCollectCorn();
             this.addFloatingText("+100", item.x, item.y, '#ffc107');
         } else if (item.type === 'SHIELD') {
@@ -740,6 +748,10 @@ class ChickenGame {
         // مكافأة إتمام المرحلة بالنقاط لشحن الألعاب
         this.score += 2000;
         this.levelScore += 2000;
+        if (window.securityWAF) {
+            window.securityWAF.lastValidScore = this.score;
+            window.securityWAF.lastScoreHash = window.securityWAF.generateScoreHash(this.score);
+        }
 
         // فتح المستوى التالي
         if (this.currentLevelIndex + 2 > this.unlockedLevels) {
@@ -798,6 +810,16 @@ class ChickenGame {
         const scoreText = document.getElementById('hudScore');
         if (scoreText) {
             scoreText.innerText = `${this.score.toLocaleString()}`;
+        }
+
+        // تحديث رصيد النقاط داخل متجر القسائم ونافذة السحب فورياً
+        const storeScore = document.getElementById('voucherStorePlayerScore');
+        if (storeScore) {
+            storeScore.innerText = `${this.score.toLocaleString()}`;
+        }
+        const withdrawScore = document.getElementById('withdrawPlayerScore');
+        if (withdrawScore) {
+            withdrawScore.innerText = `${this.score.toLocaleString()}`;
         }
 
         // تحديث لوحة الفائزين والمكافآت وشريط التيكر المباشر تلقائياً
@@ -1274,6 +1296,20 @@ class ChickenGame {
         if (finalScoreSpan) finalScoreSpan.innerText = this.score;
         this.showModal('gameCompleteModal');
     }
+
+    // إضافة النقاط بأمان وحفظها ومزامنة جدار الحماية WAF
+    addScore(amount, save = true) {
+        if (typeof amount !== 'number' || isNaN(amount)) return;
+        this.score = Math.max(0, (this.score || 0) + amount);
+        if (window.securityWAF) {
+            window.securityWAF.lastValidScore = this.score;
+            window.securityWAF.lastScoreHash = window.securityWAF.generateScoreHash(this.score);
+        }
+        if (save) {
+            this.saveProgress();
+        }
+        this.updateHUD();
+    }
 }
 
 window.addEventListener('DOMContentLoaded', () => {
@@ -1353,8 +1389,7 @@ window.addEventListener('DOMContentLoaded', () => {
             window.adManager.showRewardedAd('DOUBLE_SCORE', () => {
                 window.scoreAlreadyDoubled = true;
                 const bonus = window.game.levelScore > 0 ? window.game.levelScore : 300;
-                window.game.score += bonus;
-                window.game.updateHUD();
+                window.game.addScore(bonus, true);
 
                 const winScoreElem = document.getElementById('winScore');
                 if (winScoreElem) winScoreElem.innerText = `${window.game.score} (+${bonus} مضاعفة!)`;
@@ -1417,10 +1452,15 @@ window.addEventListener('DOMContentLoaded', () => {
 
     // 5. أحداث متجر قسائم شحن الألعاب (Free Fire & PUBG Store)
     const openVoucherStore = () => {
-        if (window.voucherStore) {
+        if (window.voucherStore && typeof window.voucherStore.openStore === 'function') {
+            window.voucherStore.openStore();
+            return;
+        }
+        if (window.voucherStore && typeof window.voucherStore.renderStore === 'function') {
             window.voucherStore.renderStore();
         }
-        window.game.showModal('voucherStoreModal');
+        const modal = document.getElementById('voucherStoreModal');
+        if (modal) modal.style.display = 'flex';
     };
 
     document.getElementById('btnOpenVoucherStore')?.addEventListener('click', openVoucherStore);
@@ -1476,9 +1516,10 @@ window.addEventListener('DOMContentLoaded', () => {
     document.getElementById('btnStoreWatchAd')?.addEventListener('click', () => {
         if (window.adManager && window.game) {
             window.adManager.showRewardedAd('BONUS_POINTS', () => {
-                window.game.score += 2500;
-                window.game.updateHUD();
-                if (window.voucherStore) window.voucherStore.renderStore();
+                window.game.addScore(2500, true);
+                if (window.voucherStore && typeof window.voucherStore.renderStore === 'function') {
+                    window.voucherStore.renderStore();
+                }
                 alert('🎉 تهانينا! تمت إضافة +2,500 نقطة مجانية إلى رصيدك بنجاح لشحن ألعابك المفضلة!');
                 if (window.soundEngine) window.soundEngine.playCollectEgg();
             });
