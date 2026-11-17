@@ -1553,8 +1553,13 @@ window.addEventListener('DOMContentLoaded', () => {
 
     // 6. أحداث لوحة تحكم المدير والشحن الحقيقي (Admin Panel)
     const openAdminModal = () => {
-        document.getElementById('adminPinInput').value = '';
-        window.game.showModal('adminPinModal');
+        if (window.adminManager) {
+            window.adminManager.openPinModal(true);
+        } else {
+            const inp = document.getElementById('adminPinInput');
+            if (inp) inp.value = '';
+            window.game.showModal('adminPinModal');
+        }
     };
 
     document.getElementById('btnOpenAdminPanel')?.addEventListener('click', openAdminModal);

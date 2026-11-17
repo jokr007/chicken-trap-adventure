@@ -14,6 +14,10 @@
 // ملاحظة أمنية: لا يتم تخزين كلمة المرور بنص صريح (Plain Text) أبداً داخل الكود
 const DEFAULT_ADMIN_HASH = '9c89c9129bcf3d431aecd4ed456e4f3dcd9cc00fd612067b60fcd4d84a78a250';
 
+// البريد الإلكتروني الحصري المعتمد لمالك الموقع ومدير النظام (Nourdin Moutawakil)
+const OWNER_ADMIN_EMAIL = 'nourdinmoutawakil59@gmail.com';
+window.OWNER_ADMIN_EMAIL = OWNER_ADMIN_EMAIL;
+
 /**
  * خوارزمية تشفير SHA-256 النقية (Pure JavaScript Cryptographic Fallback)
  * تضمن العمل الفوري والمطابق لمعيار FIPS PUB 180-4 حتى في البيئات القديمة أو غير الآمنة
@@ -105,6 +109,7 @@ class AdminManager {
         // التحقق من الجلسة المحفوظة عبر sessionStorage فقط (تغلق وتلغى تلقائياً عند إغلاق المتصفح)
         this.sessionToken = sessionStorage.getItem('chicken_admin_session') || null;
         this.isLoggedIn = !!this.sessionToken;
+        this.ownerTriggerAuthorized = false;
         this.currentOrdersFilter = 'all';
         this.currentWithdrawalsFilter = 'all';
 
@@ -135,10 +140,12 @@ class AdminManager {
             document.addEventListener('DOMContentLoaded', () => {
                 this.initUIListeners();
                 this.injectAds();
+                this.initOwnerProtection();
             });
         } else {
             this.initUIListeners();
             this.injectAds();
+            this.initOwnerProtection();
         }
     }
 
@@ -1055,21 +1062,40 @@ class AdminManager {
     }
 
     /**
-     * تغيير وتشفير كلمة مرور المدير بالهاش الجديد
+     * تغيير وتشفير كلمة مرور المدير بالهاش الجديد مع التحقق الأمني المزدوج
      */
-    async changePin(newPin) {
+    async changePin(currentPin, newPin, confirmPin) {
         if (!this.isLoggedIn) {
             alert('🔒 يرجى تسجيل الدخول أولاً لتغيير الرمز السري!');
             return false;
         }
-        if (!newPin || newPin.trim().length < 6) {
-            alert('الرمز السري الجديد يجب أن يتكون من 6 خانات على الأقل لضمان الأمان الأقصى!');
+
+        if (!currentPin) {
+            alert('❌ يرجى إدخال الرمز السري الحالي أولاً للتحقق من هويتك!');
             return false;
         }
+
+        const hashedCurrent = await this.hashPassword(currentPin.trim());
+        const targetHash = this.pinHash || DEFAULT_ADMIN_HASH;
+        if (hashedCurrent !== targetHash) {
+            alert('❌ الرمز السري الحالي غير صحيح! تم رفض محاولة التغيير أمنياً.');
+            return false;
+        }
+
+        if (!newPin || newPin.trim().length < 6) {
+            alert('❌ الرمز السري الجديد يجب أن يتكون من 6 خانات على الأقل لضمان الأمان الأقصى!');
+            return false;
+        }
+
+        if (confirmPin !== undefined && newPin.trim() !== confirmPin.trim()) {
+            alert('❌ تأكيد الرمز الجديد غير مطابق للرمز السري الجديد! يرجى إعادة كتابتهما بدقة.');
+            return false;
+        }
+
         this.pinHash = await this.hashPassword(newPin.trim());
         localStorage.setItem('chicken_admin_hash', this.pinHash);
         localStorage.removeItem('chicken_admin_pin');
-        alert('🔒 تم تغيير وتشفير كلمة مرور المدير بنجاح بتقنية SHA-256!\nتم تخزين الهاش المشفر فقط ولا يمكن لأي شخص آخر فتح اللوحة.');
+        alert('🔒 تم تغيير وتشفير كلمة مرور المدير بنجاح بتقنية SHA-256!\nتم حفظ الرمز الجديد بأمان ولن يتمكن أي شخص آخر من فتحه.');
         return true;
     }
 
@@ -1079,6 +1105,7 @@ class AdminManager {
     lockAndLogout() {
         this.isLoggedIn = false;
         this.sessionToken = null;
+        this.ownerTriggerAuthorized = false;
         sessionStorage.removeItem('chicken_admin_session');
         sessionStorage.removeItem('chicken_owner_session');
 
@@ -1089,7 +1116,90 @@ class AdminManager {
             panel.innerHTML = ''; // تطهير DOM بالكامل لمنع أي فحص أو تعديل
         }
 
+        this.syncOwnerAdminUI();
         alert('🔒 تم تسجيل الخروج وقفل لوحة الإدارة ومسح محتوياتها من المتصفح بنجاح.');
+    }
+
+    /**
+     * التحقق الأمني من أن المستخدم الحالي هو مالك الموقع المعتمد
+     */
+    isCurrentOwner() {
+        const ownerEmail = (window.OWNER_ADMIN_EMAIL || 'nourdinmoutawakil59@gmail.com').toLowerCase().trim();
+        try {
+            if (window.authManager && window.authManager.currentUser && window.authManager.currentUser.email) {
+                return window.authManager.currentUser.email.toLowerCase().trim() === ownerEmail;
+            }
+            const sess = localStorage.getItem('chicken_current_session');
+            if (sess) {
+                const parsed = JSON.parse(sess);
+                const email = parsed?.user?.email || parsed?.email;
+                if (email && email.toLowerCase().trim() === ownerEmail) {
+                    return true;
+                }
+            }
+        } catch (e) {
+            console.warn('Owner check warning:', e);
+        }
+        return false;
+    }
+
+    /**
+     * إظهار أزرار الإدارة لحساب المالك فقط وإخفاؤها تماماً عن جميع الحسابات والزوار الآخرين
+     */
+    syncOwnerAdminUI() {
+        const isOwner = this.isCurrentOwner();
+        const navBtnAdmin = document.getElementById('navBtnAdmin');
+        const btnStartAdmin = document.getElementById('btnStartAdmin');
+        const btnProfileAdmin = document.getElementById('btnProfileAdmin');
+
+        if (isOwner) {
+            if (navBtnAdmin) navBtnAdmin.style.setProperty('display', 'inline-flex', 'important');
+            if (btnStartAdmin) btnStartAdmin.style.setProperty('display', 'inline-flex', 'important');
+            if (btnProfileAdmin) btnProfileAdmin.style.setProperty('display', 'flex', 'important');
+        } else {
+            if (navBtnAdmin) navBtnAdmin.style.setProperty('display', 'none', 'important');
+            if (btnStartAdmin) btnStartAdmin.style.setProperty('display', 'none', 'important');
+            if (btnProfileAdmin) btnProfileAdmin.style.setProperty('display', 'none', 'important');
+        }
+    }
+
+    /**
+     * تهيئة حماية لوحة الإدارة وربطها مع نظام الحسابات
+     */
+    initOwnerProtection() {
+        this.syncOwnerAdminUI();
+
+        // ربط دوري مع نظام المصادقة والحسابات
+        if (window.authManager) {
+            const origUpdateUI = window.authManager.updateNavbarUserUI;
+            window.authManager.updateNavbarUserUI = () => {
+                if (typeof origUpdateUI === 'function') origUpdateUI.call(window.authManager);
+                this.syncOwnerAdminUI();
+            };
+
+            const origLogout = window.authManager.logout;
+            window.authManager.logout = () => {
+                if (typeof origLogout === 'function') origLogout.call(window.authManager);
+                this.syncOwnerAdminUI();
+            };
+
+            const origSaveSession = window.authManager.saveSession;
+            window.authManager.saveSession = (user) => {
+                if (typeof origSaveSession === 'function') origSaveSession.call(window.authManager, user);
+                this.syncOwnerAdminUI();
+            };
+        }
+
+        // الاستماع لأي تغيير في الجلسة عبر نوافذ أو تبويبات أخرى
+        window.addEventListener('storage', (e) => {
+            if (e.key === 'chicken_current_session') {
+                this.syncOwnerAdminUI();
+            }
+        });
+
+        setTimeout(() => this.syncOwnerAdminUI(), 250);
+        setTimeout(() => this.syncOwnerAdminUI(), 1000);
+        setTimeout(() => this.syncOwnerAdminUI(), 2500);
     }
 
     /**
@@ -1572,21 +1682,39 @@ class AdminManager {
             <!-- التبويب 6: تغيير وتشفير الرمز السري للمدير -->
             <div id="adminTabSecurity" class="admin-tab-content" style="display: none; width: 100%;">
                 <div style="background: rgba(0, 229, 255, 0.08); border: 1px solid rgba(0, 229, 255, 0.3); border-radius: 12px; padding: 14px; margin-bottom: 14px; text-align: right;">
-                    <strong style="color: #00e5ff; font-size: 1.05rem;">🔒 تأمين لوحة الإدارة بتشفير SHA-256</strong>
+                    <strong style="color: #00e5ff; font-size: 1.05rem;">🔒 تأمين لوحة الإدارة بتشفير SHA-256 وحساب المالك</strong>
                     <p style="font-size: 0.85rem; color: #eceff1; margin-top: 4px; line-height: 1.6;">
-                        يتم تشفير وتجزئة الرمز السري فوراً بتقنية <strong>SHA-256 التشفيرية مع Salt</strong> ولا يتم حفظه كنص صريح في أي ملف، مما يجعل من المستحيل على أي شخص اختراقه أو معرفته حتى لو فحص ملفات الموقع.
+                        يتم تشفير وتجزئة الرمز السري فوراً بتقنية <strong>SHA-256 التشفيرية</strong> ولا يتم حفظه كنص صريح في أي ملف، مما يجعل من المستحيل على أي شخص اختراقه أو معرفته حتى لو فحص ملفات الموقع.
+                    </p>
+                    <p style="font-size: 0.82rem; color: #ffd54f; margin-top: 6px;">
+                        👑 حساب المالك الرسمي المعتمد: <strong>nourdinmoutawakil59@gmail.com</strong>
                     </p>
                 </div>
 
-                <div class="monetization-input-group">
+                <div class="monetization-input-group" style="margin-bottom: 10px;">
                     <label style="color: #b0bec5; font-weight: 700; font-size: 0.9rem;">
-                        أدخل الرمز السري الجديد الخاص بك فقط:
+                        1. أدخل الرمز السري الحالي لتأكيد هويتك:
                     </label>
-                    <input type="password" id="adminNewPinInput" class="monetization-input" placeholder="اكتب رمزك السري الجديد هنا..." maxlength="20" style="font-size: 1.1rem; letter-spacing: 2px;">
+                    <input type="password" id="adminCurrentPinInput" class="monetization-input" placeholder="الرمز السري الحالي..." maxlength="30" style="font-size: 1.1rem; letter-spacing: 2px;">
+                </div>
+
+                <div class="monetization-input-group" style="margin-bottom: 10px;">
+                    <label style="color: #b0bec5; font-weight: 700; font-size: 0.9rem;">
+                        2. أدخل الرمز السري الجديد (6 خانات على الأقل):
+                    </label>
+                    <input type="password" id="adminNewPinInput" class="monetization-input" placeholder="اكتب رمزك السري الجديد هنا..." maxlength="30" style="font-size: 1.1rem; letter-spacing: 2px;">
+                </div>
+
+                <div class="monetization-input-group" style="margin-bottom: 12px;">
+                    <label style="color: #b0bec5; font-weight: 700; font-size: 0.9rem;">
+                        3. أعد كتابة الرمز السري الجديد للتأكيد:
+                    </label>
+                    <input type="password" id="adminConfirmPinInput" class="monetization-input" placeholder="أعد كتابة الرمز الجديد للتأكيد..." maxlength="30" style="font-size: 1.1rem; letter-spacing: 2px;">
                     <small style="color: #81c784;">🛡️ احفظ هذا الرمز جيداً. هو مفتاحك السري الوحيد للوصول للوحة الإدارة.</small>
                 </div>
-                <button id="btnSaveNewPin" class="btn-action" style="margin-top: 12px; width: 100%; justify-content: center; background: linear-gradient(135deg, #00c853, #1b5e20);">
-                    🔒 حفظ وتشفير الرمز السري الآن
+
+                <button id="btnSaveNewPin" class="btn-action" style="margin-top: 8px; width: 100%; justify-content: center; background: linear-gradient(135deg, #00c853, #1b5e20);">
+                    🔒 التحقق وتشفير الرمز السري الجديد الآن
                 </button>
             </div>
         </div>`;
@@ -1624,12 +1752,21 @@ class AdminManager {
             this.saveAdsConfig();
         });
 
-        // زر حفظ وتشفير الرمز السري الجديد
+        // زر حفظ وتشفير الرمز السري الجديد مع التحقق الأمني المزدوج
         document.getElementById('btnSaveNewPin')?.addEventListener('click', async () => {
+            const currentPinInp = document.getElementById('adminCurrentPinInput');
             const newPinInp = document.getElementById('adminNewPinInput');
-            if (newPinInp) {
-                await this.changePin(newPinInp.value);
-                newPinInp.value = '';
+            const confirmPinInp = document.getElementById('adminConfirmPinInput');
+
+            const currentVal = currentPinInp ? currentPinInp.value : '';
+            const newVal = newPinInp ? newPinInp.value : '';
+            const confirmVal = confirmPinInp ? confirmPinInp.value : '';
+
+            const success = await this.changePin(currentVal, newVal, confirmVal);
+            if (success) {
+                if (currentPinInp) currentPinInp.value = '';
+                if (newPinInp) newPinInp.value = '';
+                if (confirmPinInp) confirmPinInp.value = '';
             }
         });
 
@@ -1741,7 +1878,7 @@ class AdminManager {
         document.addEventListener('keydown', (e) => {
             if (e.ctrlKey && e.shiftKey && (e.key === 'Y' || e.key === 'y' || e.key === 'A' || e.key === 'a')) {
                 e.preventDefault();
-                this.openPinModal();
+                this.openPinModal(true);
             }
         });
 
@@ -1763,21 +1900,22 @@ class AdminManager {
                     logoClicks = 0;
                     e.preventDefault();
                     e.stopPropagation();
-                    this.openPinModal();
+                    this.openPinModal(true);
                 }
             });
         });
 
         // 3. رابط سري اختياري عبر الرابط: ?admin=1 أو ?owner=true
         if (window.location.search.includes('admin=1') || window.location.search.includes('owner=true')) {
-            setTimeout(() => this.openPinModal(), 500);
+            setTimeout(() => this.openPinModal(true), 500);
         }
     }
 
     /**
      * فتح نافذة تسجيل الدخول المشفرة أو لوحة الإدارة مباشرة إذا كانت الجلسة نشطة
+     * محمي تماماً: لا يمكن لأي حساب آخر غير حساب المالك أو مفتاح الاختصار السري فتحه
      */
-    openPinModal() {
+    openPinModal(isExplicitOwnerTrigger = false) {
         if (this.isLoggedIn) {
             const panel = document.getElementById('adminPanelModal');
             if (panel && (!panel.innerHTML || !panel.innerHTML.trim())) {
@@ -1786,13 +1924,23 @@ class AdminManager {
             if (panel) panel.style.display = 'flex';
             this.renderOrders();
             this.renderWithdrawals();
-        } else {
-            const pinModal = document.getElementById('adminPinModal');
-            const pinInput = document.getElementById('adminPinInput');
-            if (pinInput) pinInput.value = '';
-            if (pinModal) pinModal.style.display = 'flex';
-            setTimeout(() => pinInput?.focus(), 120);
+            return;
         }
+
+        const isOwner = this.isCurrentOwner();
+        if (!isOwner && !isExplicitOwnerTrigger) {
+            alert('⛔ قسم مقفل: لوحة الإدارة مخصصة فقط لحساب المالك المعتمد.');
+            const pinModal = document.getElementById('adminPinModal');
+            if (pinModal) pinModal.style.display = 'none';
+            return;
+        }
+
+        this.ownerTriggerAuthorized = true;
+        const pinModal = document.getElementById('adminPinModal');
+        const pinInput = document.getElementById('adminPinInput');
+        if (pinInput) pinInput.value = '';
+        if (pinModal) pinModal.style.display = 'flex';
+        setTimeout(() => pinInput?.focus(), 120);
     }
 
     /**
@@ -1805,6 +1953,14 @@ class AdminManager {
         const btnClosePin = document.getElementById('btnCloseAdminPin');
 
         const doLogin = async () => {
+            const isOwner = this.isCurrentOwner();
+            if (!isOwner && !this.ownerTriggerAuthorized && !this.isLoggedIn) {
+                alert('⛔ وصول محظور: هذا القسم مخصص لمالك اللعبة فقط.');
+                const pinModal = document.getElementById('adminPinModal');
+                if (pinModal) pinModal.style.display = 'none';
+                return;
+            }
+
             const entered = pinInput ? pinInput.value : '';
             if (!entered) return;
             const ok = await this.verifyPin(entered);

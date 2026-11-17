@@ -77,7 +77,7 @@
                     <span class="nav-icon">👤</span>
                     <span>تسجيل الدخول</span>
                 </button>
-                <button class="nav-item-btn" id="navBtnAdmin" title="لوحة إدارة المالك">
+                <button class="nav-item-btn" id="navBtnAdmin" title="لوحة إدارة المالك" style="display: none !important;">
                     <span class="nav-icon">⚙️</span>
                     <span>لوحة الإدارة</span>
                 </button>
@@ -364,7 +364,7 @@
                 <button id="btnStartSocial" class="btn-secondary" style="flex: 1; font-size: 0.9rem; padding: 7px 12px;">
                     🌐 مواقع التواصل
                 </button>
-                <button id="btnStartAdmin" class="btn-secondary" style="flex: 1; font-size: 0.9rem; padding: 7px 12px; border-color: #ffd700; color: #ffd700;" title="لوحة إدارة المالك">
+                <button id="btnStartAdmin" class="btn-secondary" style="display: none !important; flex: 1; font-size: 0.9rem; padding: 7px 12px; border-color: #ffd700; color: #ffd700;" title="لوحة إدارة المالك">
                     ⚙️ الإدارة
                 </button>
             </div>
@@ -1562,6 +1562,10 @@
                     <span class="detail-value" style="color: #81c784;">🟢 محمي بجدار حماية WAF</span>
                 </div>
             </div>
+
+            <button id="btnProfileAdmin" class="btn-action" style="display: none !important; width: 100%; margin-top: 10px; margin-bottom: 6px; justify-content: center; background: linear-gradient(135deg, #ffd700, #ff9800); color: #000; font-weight: 900; border-radius: 10px;">
+                ⚙️ فتح لوحة تحكم المالك 👑
+            </button>
 
             <div class="btn-group" style="width: 100%; margin-top: 8px;">
                 <button id="btnProfileLogout" class="btn-secondary" style="border-color: #f44336; color: #ff8a80;">

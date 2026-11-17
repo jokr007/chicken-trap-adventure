@@ -109,10 +109,14 @@ class FeaturesManager {
         // فتح لوحة المدير
         navBtnAdmin?.addEventListener('click', () => {
             this.closeMobileMenu();
-            const adminPinInp = document.getElementById('adminPinInput');
-            if (adminPinInp) adminPinInp.value = '';
-            const pinModal = document.getElementById('adminPinModal');
-            if (pinModal) pinModal.style.display = 'flex';
+            if (window.adminManager) {
+                window.adminManager.openPinModal(true);
+            } else {
+                const adminPinInp = document.getElementById('adminPinInput');
+                if (adminPinInp) adminPinInp.value = '';
+                const pinModal = document.getElementById('adminPinModal');
+                if (pinModal) pinModal.style.display = 'flex';
+            }
         });
 
         // قائمة الهاتف (Hamburger Menu)
@@ -176,18 +180,21 @@ class FeaturesManager {
         // زر لوحة تحكم الإدارة في شاشة البداية
         const btnStartAdmin = document.getElementById('btnStartAdmin');
         btnStartAdmin?.addEventListener('click', () => {
-            const adminPinInp = document.getElementById('adminPinInput');
-            if (adminPinInp) adminPinInp.value = '';
-
-            if (window.adminManager && window.adminManager.isLoggedIn) {
-                const adminPanel = document.getElementById('adminPanelModal');
-                if (adminPanel) adminPanel.style.display = 'flex';
-                window.adminManager.renderOrders();
-                window.adminManager.renderVault();
-                this.populateAdminForm();
+            if (window.adminManager) {
+                window.adminManager.openPinModal(true);
             } else {
                 const pinModal = document.getElementById('adminPinModal');
                 if (pinModal) pinModal.style.display = 'flex';
+            }
+        });
+
+        // زر لوحة تحكم الإدارة من داخل الملف الشخصي للمالك
+        const btnProfileAdmin = document.getElementById('btnProfileAdmin');
+        btnProfileAdmin?.addEventListener('click', () => {
+            const profileModal = document.getElementById('userProfileModal');
+            if (profileModal) profileModal.style.display = 'none';
+            if (window.adminManager) {
+                window.adminManager.openPinModal(true);
             }
         });
 
