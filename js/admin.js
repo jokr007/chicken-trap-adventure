@@ -158,11 +158,14 @@ class AdminManager {
      */
     loadAdminConfig() {
         const defaults = {
-            // شبكات الإعلانات والربح الحقيقي
-            adsensePubId: "ca-pub-XXXXXXXXXXXXXXXX",
+            // شبكات الإعلانات والربح الحقيقي (Google AdSense & AdMob)
+            adsensePubId: "ca-pub-7109468486527527",
+            admobAppId: "ca-app-pub-7109468486527527~4187178396",
+            admobBannerId: "ca-app-pub-7109468486527527/5336734846",
+            admobInterstitialId: "ca-app-pub-7109468486527527/7691435445",
             monetagZoneId: "",
             directAdLink: "",
-            realAdsActive: false,
+            realAdsActive: true,
             adNetwork: "adsense",
 
             // تنبيهات تليجرام الفورية

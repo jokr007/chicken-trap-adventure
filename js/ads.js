@@ -6,12 +6,15 @@
 
 class AdManager {
     constructor() {
-        // إعدادات الناشر الرسمية
+        // إعدادات الناشر الرسمية (Google AdSense & Google AdMob)
         this.config = {
             publisherId: "ca-pub-7109468486527527", // معرف الناشر الفعلي
-            topBannerSlot: "1234567890",
-            bottomBannerSlot: "0987654321",
-            interstitialSlot: "1122334455",
+            admobAppId: "ca-app-pub-7109468486527527~4187178396", // معرف تطبيق AdMob
+            admobBannerId: "ca-app-pub-7109468486527527/5336734846", // إعلان البانر الرئيسي Main Banner
+            admobInterstitialId: "ca-app-pub-7109468486527527/7691435445", // الإعلان البيني GameOver Interstitial
+            topBannerSlot: "5336734846",
+            bottomBannerSlot: "5336734846",
+            interstitialSlot: "7691435445",
             testMode: false,
             adFrequencyLevels: 2 // عرض إعلان بيني كل مستويين
         };

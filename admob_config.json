@@ -1,0 +1,21 @@
+{
+  "appName": "Chicken Trap Adventure (مغامرة كوكو)",
+  "packageName": "com.chickengame.adventure",
+  "publisherId": "pub-7109468486527527",
+  "admob": {
+    "appId": "ca-app-pub-7109468486527527~4187178396",
+    "adUnits": {
+      "mainBanner": {
+        "name": "Main Banner",
+        "format": "Banner",
+        "id": "ca-app-pub-7109468486527527/5336734846"
+      },
+      "gameOverInterstitial": {
+        "name": "GameOver Interstitial",
+        "format": "Interstitial",
+        "id": "ca-app-pub-7109468486527527/7691435445"
+      }
+    }
+  },
+  "appAdsTxt": "google.com, pub-7109468486527527, DIRECT, f08c47fec0942fa0"
+}

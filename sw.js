@@ -1,5 +1,5 @@
-// إعدادات كاش اللعبة الأصلية PWA للتشغيل السلس دون إنترنت (إصدار متوافق v17 - دعم app-ads.txt لـ AdMob)
-const CACHE_NAME = 'chicken-game-v17';
+// إعدادات كاش اللعبة الأصلية PWA للتشغيل السلس دون إنترنت (إصدار متوافق v18 - تكامل AdMob و AdSense)
+const CACHE_NAME = 'chicken-game-v18';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -8,6 +8,8 @@ const ASSETS_TO_CACHE = [
   './contact.html',
   './manifest.json',
   './ads.txt',
+  './app-ads.txt',
+  './admob_config.json',
   './app-ads.txt',
   './icon.svg',
   './icon-192.png',
