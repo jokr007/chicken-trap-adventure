@@ -964,15 +964,9 @@ body.has-touch .mobile-controls,
     color: #b0bec5;
 }
 
-/* إخفاء الإعلانات الجانبية تماماً على كل الشاشات الأقل من 1240 بكسل لمنع انقسام أو ضغط الشاشة */
+/* إخفاء الإعلانات الجانبية تماماً لمنع ضغط شاشة اللعبة والامتثال التام لـ AdSense */
 .sidebar-ad-slot {
     display: none !important;
-}
-
-@media (min-width: 1240px) {
-    .sidebar-ad-slot {
-        display: flex !important;
-    }
 }
 
 .mobile-bottom-ad-slot {

@@ -1,17 +1,5 @@
-// 1. إعدادات شبكة إعلانات Monetag المحدثة (محمية ضد الحظر وانقطاع الاتصال)
-self.options = {
-    "domain": "3nbf4.com",
-    "zoneId": 12279650
-};
-self.lary = "";
-try {
-    importScripts('https://3nbf4.com/act/files/service-worker.min.js?r=sw');
-} catch (e) {
-    console.warn('Monetag SW script bypassed or blocked by ad-blocker:', e);
-}
-
-// 2. إعدادات كاش اللعبة الأصلية PWA للتشغيل دون إنترنت (إصدار محدث v13 - إضافة الصفحات القانونية)
-const CACHE_NAME = 'chicken-game-v13';
+// إعدادات كاش اللعبة الأصلية PWA للتشغيل السلس دون إنترنت (إصدار متوافق v14 - إزالة الإعلانات المزعجة)
+const CACHE_NAME = 'chicken-game-v14';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',

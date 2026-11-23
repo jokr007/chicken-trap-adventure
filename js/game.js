@@ -367,14 +367,10 @@ class ChickenGame {
         this.lastActiveTimestamp = now;
         this.activePlayTimeMs += delta;
 
-        // فحص اكتمال وقت اللعب الفعلي + انقضاء 10 دقائق كاملة منذ آخر إعلان
+        // فحص اكتمال وقت اللعب الفعلي (لا نقطع اللعب أبداً بنوافذ منبثقة)
         if (this.activePlayTimeMs >= adIntervalMs) {
             this.activePlayTimeMs = 0;
             this.lastActiveTimestamp = null;
-            if (window.adManager && !window.adManager.canShowAutomaticAd()) {
-                return;
-            }
-            this.triggerMandatoryPopAd();
             return;
         }
 

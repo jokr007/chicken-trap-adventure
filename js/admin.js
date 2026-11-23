@@ -423,20 +423,8 @@ class AdminManager {
             return;
         }
 
-        // 2. حقن وسم شبكة Monetag إذا كان Zone ID مضبوطاً
-        if (cfg.monetagZoneId && cfg.monetagZoneId.trim().length > 3) {
-            console.log('📢 جاري حقن كود Monetag الرسمي Zone ID:', cfg.monetagZoneId);
-
-            if (!document.getElementById('monetag-injected-script')) {
-                const script = document.createElement('script');
-                script.id = 'monetag-injected-script';
-                script.src = 'https://alwingulla.com/88/tag.min.js';
-                script.setAttribute('data-zone', cfg.monetagZoneId.trim());
-                script.async = true;
-                script.setAttribute('data-cfasync', 'false');
-                document.head.appendChild(script);
-            }
-        }
+        // 2. تم تعطيل شبكة Monetag للامتثال الصارم لسياسات Google AdSense ومنع انهيار التطبيق
+        // (يمكن تفعيلها لاحقاً من لوحة الإدارة بعد القبول)
 
         // 3. تفعيل رابط الربح المباشر المربح (Smartlink / Direct Link)
         if (cfg.directAdLink && cfg.directAdLink.startsWith('http')) {
