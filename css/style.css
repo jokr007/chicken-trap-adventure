@@ -379,6 +379,7 @@ body.has-touch .mobile-controls,
 }
 
 .dpad-container {
+    direction: ltr !important;
     display: grid;
     grid-template-columns: repeat(3, 64px);
     grid-template-rows: repeat(3, 64px);
