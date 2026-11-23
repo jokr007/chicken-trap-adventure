@@ -451,69 +451,41 @@ class FeaturesManager {
                 channelUrl = 'https://' + channelUrl;
             }
 
-            // فتح رابط القناة في نافذة جديدة
-            window.open(channelUrl, '_blank');
+            // تسجيل زيارة القناة مسبقاً لحماية اللاعب عند عودته للتطبيق بالهاتف
+            try {
+                localStorage.setItem('chicken_sub_visited', 'true');
+            } catch (e) {}
 
-            // تعطيل الزر الأول
-            btnMandatoryGoSub.disabled = true;
+            // فتح رابط القناة بأمان
+            try {
+                window.open(channelUrl, '_blank');
+            } catch (e) {
+                window.location.href = channelUrl;
+            }
 
-            // إظهار صندوق التحقق
+            // تحديث الزر الأول
+            btnMandatoryGoSub.innerText = '✅ تم فتح رابط القناة بنجاح 🔔';
+            btnMandatoryGoSub.style.opacity = '0.9';
+
+            // إظهار صندوق التحقق وملء شريط التقدم فورياً
             if (mandatorySubProgress) {
                 mandatorySubProgress.style.display = 'block';
             }
-
-            // تعطيل زر التحقق أثناء العد التنازلي
-            btnMandatoryVerify.disabled = true;
-            btnMandatoryVerify.setAttribute('disabled', 'true');
-            btnMandatoryVerify.style.cursor = 'not-allowed';
-            btnMandatoryVerify.style.opacity = '0.6';
-
-            // عداد 10 ثوانٍ للتحقق من الاشتراك
-            let timeLeft = 10;
-            const totalTime = 10;
-
             if (mandatoryProgressBar) {
-                mandatoryProgressBar.style.width = '0%';
-                mandatoryProgressBar.style.transition = 'width 0.4s ease';
+                mandatoryProgressBar.style.width = '100%';
+                mandatoryProgressBar.style.transition = 'width 0.8s ease';
             }
             if (mandatoryStatusText) {
-                mandatoryStatusText.innerText = `جاري التحقق من الاشتراك في القناة... (${timeLeft} ثوانٍ متبقية) ⏳`;
+                mandatoryStatusText.innerText = 'تم رصد الانتقال للقناة بنجاح! اضغط أدناه للتأكيد وتفعيل اللعبة فوراً 🚀';
             }
 
-            if (this.countdownTimer) {
-                clearInterval(this.countdownTimer);
-                this.countdownTimer = null;
-            }
-
-            this.countdownTimer = setInterval(() => {
-                timeLeft--;
-                const percent = Math.min(100, Math.round(((totalTime - timeLeft) / totalTime) * 100));
-
-                if (mandatoryProgressBar) {
-                    mandatoryProgressBar.style.width = `${percent}%`;
-                }
-
-                if (timeLeft > 0) {
-                    if (mandatoryStatusText) {
-                        mandatoryStatusText.innerText = `جاري التحقق من الاشتراك في القناة... (${timeLeft} ثوانٍ متبقية) ⏳`;
-                    }
-                } else {
-                    clearInterval(this.countdownTimer);
-                    this.countdownTimer = null;
-
-                    if (mandatoryStatusText) {
-                        mandatoryStatusText.innerText = 'تم التحقق بنجاح! اضغط على الزر أدناه لتفعيل اللعبة ✅';
-                    }
-                    if (mandatoryProgressBar) {
-                        mandatoryProgressBar.style.width = '100%';
-                    }
-
-                    btnMandatoryVerify.disabled = false;
-                    btnMandatoryVerify.removeAttribute('disabled');
-                    btnMandatoryVerify.style.cursor = 'pointer';
-                    btnMandatoryVerify.style.opacity = '1';
-                }
-            }, 1000);
+            // تفعيل زر التحقق فوراً وبدون أي تعطيل أو إقفال
+            btnMandatoryVerify.disabled = false;
+            btnMandatoryVerify.removeAttribute('disabled');
+            btnMandatoryVerify.style.cursor = 'pointer';
+            btnMandatoryVerify.style.opacity = '1';
+            btnMandatoryVerify.style.background = 'linear-gradient(135deg, #10b981, #059669)';
+            btnMandatoryVerify.innerText = '2️⃣ اضغط هنا لتأكيد الاشتراك وتفعيل اللعبة فوراً ✅';
         });
 
         // 2. عند النقر على الزر الثاني (#btnMandatoryVerify):
@@ -523,17 +495,28 @@ class FeaturesManager {
                 this.countdownTimer = null;
             }
 
+            // حفظ حالة الاشتراك الدائم
+            try {
+                localStorage.setItem('hasSubscribed', 'true');
+                localStorage.setItem('chicken_mandatory_subscribed', 'true');
+                localStorage.setItem('chicken_sub_visited', 'true');
+            } catch (e) {}
+
             // إخفاء نافذة الاشتراك
             if (mandatorySubModal) {
                 mandatorySubModal.style.display = 'none';
             }
 
-            // حفظ حالة الاشتراك الدائم
-            localStorage.setItem('hasSubscribed', 'true');
-            localStorage.setItem('chicken_mandatory_subscribed', 'true');
-
             if (window.soundEngine && window.soundEngine.playItemPickup) {
                 window.soundEngine.playItemPickup();
+            }
+
+            // مكافأة تفعيل الاشتراك: منح 500 نقطة للاعب
+            if (window.game) {
+                window.game.score = (window.game.score || 0) + 500;
+                window.game.saveProgress && window.game.saveProgress();
+                window.game.updateHUD && window.game.updateHUD();
+                window.game.showToast && window.game.showToast("🎉 مبروك! تم تفعيل اللعبة ومنحك +500 نقطة هدية الاشتراك! 🚀", "success");
             }
 
             // تفعيل اللعبة والبدء فوراً
@@ -633,6 +616,7 @@ class FeaturesManager {
 
         const isAlreadySub = localStorage.getItem('hasSubscribed') === 'true' || 
                              localStorage.getItem('chicken_mandatory_subscribed') === 'true';
+        const hasVisited = localStorage.getItem('chicken_sub_visited') === 'true';
 
         if (isAlreadySub && forceOpen) {
             // إذا فتح المستخدم النافذة يدوياً وهو مشترك بالفعل
@@ -657,26 +641,27 @@ class FeaturesManager {
                 mandatoryStatusText.innerText = 'أنت مشترك بالفعل وتم التحقق من الشرط الإلزامي بنجاح! 🎉';
             }
         } else {
-            // إعادة ضبط الأزرار للحالة الأساسية للتحقق
+            // حالة عادية أو بعد عودة اللاعب من زيارة القناة
             if (btnMandatoryGoSub) {
                 btnMandatoryGoSub.disabled = false;
-                btnMandatoryGoSub.innerText = '1️⃣ اضغط هنا للاشتراك في القناة الرسمية 🔔';
+                btnMandatoryGoSub.innerText = hasVisited ? '✅ تم فتح القناة (اضغط لإعادة الزيارة 🔔)' : '1️⃣ اضغط هنا للاشتراك في القناة الرسمية 🔔';
             }
             if (btnMandatoryVerify) {
-                btnMandatoryVerify.disabled = true;
-                btnMandatoryVerify.setAttribute('disabled', 'true');
-                btnMandatoryVerify.style.cursor = 'not-allowed';
-                btnMandatoryVerify.style.opacity = '0.6';
-                btnMandatoryVerify.innerText = '2️⃣ اضغط هنا للتحقق وتفعيل اللعبة فوراً (بعد الاشتراك) ✅';
+                btnMandatoryVerify.disabled = false;
+                btnMandatoryVerify.removeAttribute('disabled');
+                btnMandatoryVerify.style.cursor = 'pointer';
+                btnMandatoryVerify.style.opacity = '1';
+                btnMandatoryVerify.style.background = 'linear-gradient(135deg, #10b981, #059669)';
+                btnMandatoryVerify.innerText = hasVisited ? '2️⃣ اضغط هنا لتأكيد التفعيل والبدء فوراً ✅' : '2️⃣ اضغط هنا للتحقق وتفعيل اللعبة فوراً (بعد الاشتراك) ✅';
             }
             if (mandatorySubProgress) {
-                mandatorySubProgress.style.display = 'none';
+                mandatorySubProgress.style.display = hasVisited ? 'block' : 'none';
             }
             if (mandatoryProgressBar) {
-                mandatoryProgressBar.style.width = '0%';
+                mandatoryProgressBar.style.width = hasVisited ? '100%' : '0%';
             }
             if (mandatoryStatusText) {
-                mandatoryStatusText.innerText = 'جاري التحقق من الاشتراك... ⏳';
+                mandatoryStatusText.innerText = hasVisited ? 'تم رصد زيارة القناة بنجاح! اضغط أدناه للتفعيل 🚀' : 'جاري التحقق من الاشتراك... ⏳';
             }
         }
 
