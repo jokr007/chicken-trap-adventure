@@ -56,10 +56,17 @@ class ChickenGame {
             right: false
         };
 
-        // تتبع وقت اللعب الفعلي للإعلانات المنبثقة الإلزامية كل 60 ثانية
+        // تتبع وقت اللعب الفعلي للإعلانات المنبثقة الإلزامية كل 10 دقائق
         this.activePlayTimeMs = 0;
         this.lastActiveTimestamp = null;
         this.wasBgmPlayingBeforeAd = false;
+
+        // تهيئة التوقيت المرجعي للإعلانات لضمان مرور 10 دقائق كاملة قبل أي إعلان
+        try {
+            if (!localStorage.getItem('chicken_last_ad_timestamp')) {
+                localStorage.setItem('chicken_last_ad_timestamp', Date.now().toString());
+            }
+        } catch (e) {}
 
         this.lastTime = 0;
         this.initInputListeners();
@@ -179,13 +186,10 @@ class ChickenGame {
     }
 
     initUI() {
-        // زر الصوت
-        const btnMute = document.getElementById('btnMute');
-        if (btnMute) {
-            btnMute.addEventListener('click', () => {
-                const muted = window.soundEngine.toggleMute();
-                btnMute.innerHTML = muted ? '🔇' : '🔊';
-            });
+        // تهيئة وتحديث أزرار وعناصر التحكم في الصوت
+        if (window.soundEngine) {
+            window.soundEngine.initUIListeners();
+            window.soundEngine.updateAllSoundUIs();
         }
 
         // زر إعادة المرحلة
@@ -349,7 +353,12 @@ class ChickenGame {
             return;
         }
 
-        // حساب وقت اللعب الفعلي للإعلان المنبثق الإلزامي كل دقيقة (60 ثانية)
+        // حساب وقت اللعب الفعلي للإعلان المنبثق الإلزامي كل 10 دقائق (أو حسب إعدادات لوحة الإدارة)
+        const adIntervalMinutes = (window.adminConfig && window.adminConfig.mandatoryAdIntervalMinutes)
+            ? window.adminConfig.mandatoryAdIntervalMinutes
+            : 10;
+        const adIntervalMs = adIntervalMinutes * 60 * 1000;
+
         const now = Date.now();
         if (!this.lastActiveTimestamp) {
             this.lastActiveTimestamp = now;
@@ -358,9 +367,13 @@ class ChickenGame {
         this.lastActiveTimestamp = now;
         this.activePlayTimeMs += delta;
 
-        if (this.activePlayTimeMs >= 60000) { // 60 ثانية لعب فعلي
+        // فحص اكتمال وقت اللعب الفعلي + انقضاء 10 دقائق كاملة منذ آخر إعلان
+        if (this.activePlayTimeMs >= adIntervalMs) {
             this.activePlayTimeMs = 0;
             this.lastActiveTimestamp = null;
+            if (window.adManager && !window.adManager.canShowAutomaticAd()) {
+                return;
+            }
             this.triggerMandatoryPopAd();
             return;
         }

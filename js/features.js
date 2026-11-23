@@ -37,6 +37,8 @@ class FeaturesManager {
         const navBtnHome = document.getElementById('navBtnHome');
         const navBtnAbout = document.getElementById('navBtnAbout');
         const navBtnSocial = document.getElementById('navBtnSocial');
+        const navBtnPartners = document.getElementById('navBtnPartners');
+        const navBtnContact = document.getElementById('navBtnContact');
         const navBtnVouchers = document.getElementById('navBtnVouchers');
         const navBtnReferral = document.getElementById('navBtnReferral');
         const navBtnWithdraw = document.getElementById('navBtnWithdraw');
@@ -66,6 +68,18 @@ class FeaturesManager {
         navBtnSocial?.addEventListener('click', () => {
             this.closeMobileMenu();
             this.showSocialModal();
+        });
+
+        // فتح نافذة شركاء الألعاب والمنصات الرسمية
+        navBtnPartners?.addEventListener('click', () => {
+            this.closeMobileMenu();
+            this.showPartnersModal();
+        });
+
+        // فتح نافذة اتصل بنا والدعم الفني
+        navBtnContact?.addEventListener('click', () => {
+            this.closeMobileMenu();
+            this.showContactModal();
         });
 
         // فتح متجر القسائم
@@ -201,11 +215,172 @@ class FeaturesManager {
         // زر إعادة تعيين اشتراك المدير للتجربة
         const btnResetAdminSub = document.getElementById('btnResetAdminSub');
         btnResetAdminSub?.addEventListener('click', () => this.resetMySubscription());
+
+        // أزرار شركاء الألعاب والمنصات الرسمية
+        const btnStartPartners = document.getElementById('btnStartPartners');
+        btnStartPartners?.addEventListener('click', () => this.showPartnersModal());
+
+        const btnClosePartners = document.getElementById('btnClosePartnersModal');
+        btnClosePartners?.addEventListener('click', () => this.hidePartnersModal());
+
+        const btnClosePartnersTop = document.getElementById('btnClosePartnersModalTop');
+        btnClosePartnersTop?.addEventListener('click', () => this.hidePartnersModal());
+
+        this.initPartnersFilter();
+
+        // أزرار الصفحات القانونية في شاشة البداية
+        const btnStartPrivacy = document.getElementById('btnStartPrivacy');
+        btnStartPrivacy?.addEventListener('click', () => this.showPrivacyModal());
+
+        const btnStartTerms = document.getElementById('btnStartTerms');
+        btnStartTerms?.addEventListener('click', () => this.showTermsModal());
+
+        const btnStartContact = document.getElementById('btnStartContact');
+        btnStartContact?.addEventListener('click', () => this.showContactModal());
+
+        // أزرار إغلاق النوافذ القانونية
+        document.getElementById('btnClosePrivacyModal')?.addEventListener('click', () => this.hidePrivacyModal());
+        document.getElementById('btnClosePrivacyModalTop')?.addEventListener('click', () => this.hidePrivacyModal());
+
+        document.getElementById('btnCloseTermsModal')?.addEventListener('click', () => this.hideTermsModal());
+        document.getElementById('btnCloseTermsModalTop')?.addEventListener('click', () => this.hideTermsModal());
+
+        document.getElementById('btnCloseContactModal')?.addEventListener('click', () => this.hideContactModal());
+        document.getElementById('btnCloseContactModalTop')?.addEventListener('click', () => this.hideContactModal());
+
+        // روابط التذييل السفلي القانوني
+        document.getElementById('linkFooterAbout')?.addEventListener('click', (e) => {
+            e.preventDefault();
+            this.showAboutModal();
+        });
+        document.getElementById('linkFooterPartners')?.addEventListener('click', (e) => {
+            e.preventDefault();
+            this.showPartnersModal();
+        });
+        document.getElementById('linkFooterSocial')?.addEventListener('click', (e) => {
+            e.preventDefault();
+            this.showSocialModal();
+        });
+        document.getElementById('linkFooterVouchers')?.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (window.voucherStore && typeof window.voucherStore.openStore === 'function') {
+                window.voucherStore.openStore();
+            }
+        });
+        document.getElementById('linkFooterWinners')?.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (window.winnersBoardManager && typeof window.winnersBoardManager.openModal === 'function') {
+                window.winnersBoardManager.openModal();
+            }
+        });
     }
 
     showAboutModal() {
         const modal = document.getElementById('aboutUsModal');
         if (modal) modal.style.display = 'flex';
+    }
+
+    // ==========================================
+    // 2.2 النوافذ القانونية لـ Google AdSense (Legal Modals)
+    // ==========================================
+    showPrivacyModal() {
+        const modal = document.getElementById('privacyModal');
+        if (modal) modal.style.display = 'flex';
+    }
+
+    hidePrivacyModal() {
+        const modal = document.getElementById('privacyModal');
+        if (modal) modal.style.display = 'none';
+    }
+
+    showTermsModal() {
+        const modal = document.getElementById('termsModal');
+        if (modal) modal.style.display = 'flex';
+    }
+
+    hideTermsModal() {
+        const modal = document.getElementById('termsModal');
+        if (modal) modal.style.display = 'none';
+    }
+
+    showContactModal() {
+        const modal = document.getElementById('contactModal');
+        if (modal) modal.style.display = 'flex';
+    }
+
+    hideContactModal() {
+        const modal = document.getElementById('contactModal');
+        if (modal) modal.style.display = 'none';
+    }
+
+    handleModalContactSubmit() {
+        const name = document.getElementById('modalContactName')?.value.trim();
+        const email = document.getElementById('modalContactEmail')?.value.trim();
+        const type = document.getElementById('modalContactType')?.value;
+        const subject = document.getElementById('modalContactSubject')?.value.trim();
+        const message = document.getElementById('modalContactMessage')?.value.trim();
+
+        const feedback = document.getElementById('modalContactFeedback');
+        const submitBtn = document.getElementById('btnModalSubmitContact');
+
+        if (!name || !email || !subject || !message) {
+            alert('يرجى ملء جميع الحقول المطلوبة.');
+            return;
+        }
+
+        if (submitBtn) {
+            submitBtn.disabled = true;
+            submitBtn.innerText = 'جاري الإرسال... ⏳';
+        }
+
+        setTimeout(() => {
+            if (feedback) {
+                feedback.style.display = 'block';
+                feedback.className = 'form-feedback success';
+                feedback.innerHTML = `
+                    ✅ تم استلام رسالتك بنجاح يا <strong>${name}</strong>!<br>
+                    سيتم الرد على بريدك <strong>${email}</strong> خلال 24 إلى 48 ساعة.
+                `;
+            }
+            if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.innerText = '✉️ إرسال رسالة أخرى';
+            }
+            document.getElementById('modalContactForm')?.reset();
+        }, 700);
+    }
+
+    // ==========================================
+    // 2.5 نافذة شركاء الألعاب الرسميين (Gaming Partners Modal)
+    // ==========================================
+    showPartnersModal() {
+        const modal = document.getElementById('partnersModal');
+        if (modal) modal.style.display = 'flex';
+    }
+
+    hidePartnersModal() {
+        const modal = document.getElementById('partnersModal');
+        if (modal) modal.style.display = 'none';
+    }
+
+    initPartnersFilter() {
+        const filterBtns = document.querySelectorAll('.partner-filter-btn');
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                const filter = btn.getAttribute('data-filter') || 'all';
+                const cards = document.querySelectorAll('.partner-card');
+                cards.forEach(card => {
+                    const cat = card.getAttribute('data-category');
+                    if (filter === 'all' || cat === filter) {
+                        card.style.display = 'flex';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
+        });
     }
 
     // ==========================================

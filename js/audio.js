@@ -5,11 +5,91 @@
 class SoundEngine {
     constructor() {
         this.ctx = null;
+        this.baseVolume = 0.3;
+        this.userVolume = 1.0; // من 0.0 إلى 1.0 (0% إلى 100%)
         this.isMuted = false;
         this.bgmPlaying = false;
         this.bgmTimer = null;
         this.bgmStep = 0;
-        this.volume = 0.3;
+
+        this.loadSettings();
+
+        // تهيئة مستمعي أحداث عناصر التحكم في الصوت عند جاهزية الصفحة
+        if (typeof document !== 'undefined') {
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', () => {
+                    this.initUIListeners();
+                    this.updateAllSoundUIs();
+                });
+            } else {
+                this.initUIListeners();
+                this.updateAllSoundUIs();
+            }
+        }
+    }
+
+    get volume() {
+        return this.isMuted ? 0 : (this.baseVolume * this.userVolume);
+    }
+
+    set volume(val) {
+        if (typeof val === 'number') {
+            this.baseVolume = val;
+        }
+    }
+
+    loadSettings() {
+        try {
+            const savedMute = localStorage.getItem('chicken_sound_muted');
+            if (savedMute !== null) {
+                this.isMuted = (savedMute === 'true');
+            }
+            const savedVol = localStorage.getItem('chicken_sound_user_volume');
+            if (savedVol !== null) {
+                const parsed = parseFloat(savedVol);
+                if (!isNaN(parsed) && parsed >= 0 && parsed <= 1) {
+                    this.userVolume = parsed;
+                }
+            }
+        } catch (e) {}
+    }
+
+    saveSettings() {
+        try {
+            localStorage.setItem('chicken_sound_muted', this.isMuted ? 'true' : 'false');
+            localStorage.setItem('chicken_sound_user_volume', this.userVolume.toString());
+        } catch (e) {}
+    }
+
+    // ضبط شدة الصوت كنسبة مئوية من 0 إلى 100
+    setVolume(percent) {
+        const val = Math.max(0, Math.min(100, Number(percent) || 0)) / 100;
+        this.userVolume = val;
+        if (val === 0) {
+            this.isMuted = true;
+            this.stopBGM();
+        } else {
+            this.isMuted = false;
+            this.init();
+            if (window.game && window.game.state === 'PLAYING' && !this.bgmPlaying) {
+                this.startBGM();
+            }
+        }
+        this.saveSettings();
+        this.updateAllSoundUIs();
+        return this.userVolume;
+    }
+
+    // رفع الصوت بمقدار محدد (افتراضياً 10%)
+    increaseVolume(step = 10) {
+        const current = Math.round(this.userVolume * 100);
+        return this.setVolume(Math.min(100, current + step));
+    }
+
+    // خفض الصوت بمقدار محدد (افتراضياً 10%)
+    decreaseVolume(step = 10) {
+        const current = Math.round(this.userVolume * 100);
+        return this.setVolume(Math.max(0, current - step));
     }
 
     init() {
@@ -25,13 +105,121 @@ class SoundEngine {
     }
 
     toggleMute() {
+        this.init();
         this.isMuted = !this.isMuted;
-        if (this.isMuted && this.bgmPlaying) {
+        if (this.isMuted) {
             this.stopBGM();
-        } else if (!this.isMuted && !this.bgmPlaying) {
-            this.startBGM();
+        } else {
+            if (this.userVolume === 0) {
+                this.userVolume = 0.8;
+            }
+            if (window.game && window.game.state === 'PLAYING') {
+                this.startBGM();
+            }
         }
+        this.saveSettings();
+        this.updateAllSoundUIs();
         return this.isMuted;
+    }
+
+    // تحديث جميع أيقونات ونصوص ومزالق الصوت في الواجهة بالتزامن
+    updateAllSoundUIs() {
+        const isMuted = this.isMuted || this.userVolume === 0;
+        const percent = isMuted ? 0 : Math.round(this.userVolume * 100);
+
+        let icon = '🔊';
+        if (isMuted || percent === 0) icon = '🔇';
+        else if (percent < 35) icon = '🔈';
+        else if (percent < 75) icon = '🔉';
+
+        // 1. أزرار شريط HUD
+        const btnMute = document.getElementById('btnMute');
+        if (btnMute) {
+            btnMute.innerHTML = icon;
+            btnMute.title = isMuted ? 'الصوت مكتوم 🔇 (انقر للتشغيل)' : `الصوت: ${percent}% (انقر للكتم)`;
+            btnMute.classList.toggle('muted', isMuted);
+        }
+        const hudVolumeRange = document.getElementById('hudVolumeRange');
+        if (hudVolumeRange) hudVolumeRange.value = percent;
+        const hudVolumeLabel = document.getElementById('hudVolumeLabel');
+        if (hudVolumeLabel) hudVolumeLabel.innerText = `${percent}%`;
+
+        // 2. زر شريط التنقل الرئيسي للموقع
+        const navSoundIcon = document.getElementById('navSoundIcon');
+        if (navSoundIcon) navSoundIcon.innerText = icon;
+        const navSoundText = document.getElementById('navSoundText');
+        if (navSoundText) navSoundText.innerText = isMuted ? 'الصوت: مكتوم 🔇' : `الصوت: ${percent}%`;
+        const btnNavMute = document.getElementById('btnNavMute');
+        if (btnNavMute) {
+            btnNavMute.classList.toggle('muted', isMuted);
+            btnNavMute.title = isMuted ? 'الصوت مكتوم (انقر للتشغيل)' : `مستوى الصوت: ${percent}% (انقر للكتم)`;
+        }
+
+        // 3. شاشة البداية Start Modal
+        const startSoundIcon = document.getElementById('startSoundIcon');
+        if (startSoundIcon) startSoundIcon.innerText = icon;
+        const startSoundLabel = document.getElementById('startSoundLabel');
+        if (startSoundLabel) startSoundLabel.innerText = isMuted ? 'الصوت: مكتوم 🔇' : 'الصوت: مفعّل 🔊';
+        const startVolumeRange = document.getElementById('startVolumeRange');
+        if (startVolumeRange) startVolumeRange.value = percent;
+        const startVolumePercent = document.getElementById('startVolumePercent');
+        if (startVolumePercent) startVolumePercent.innerText = `${percent}%`;
+
+        // 4. نافذة التوقف المؤقت Pause Modal
+        const pauseSoundIcon = document.getElementById('pauseSoundIcon');
+        if (pauseSoundIcon) pauseSoundIcon.innerText = icon;
+        const pauseSoundLabel = document.getElementById('pauseSoundLabel');
+        if (pauseSoundLabel) pauseSoundLabel.innerText = isMuted ? 'الصوت: مكتوم 🔇' : 'الصوت: مفعّل 🔊';
+        const pauseVolumeRange = document.getElementById('pauseVolumeRange');
+        if (pauseVolumeRange) pauseVolumeRange.value = percent;
+        const pauseVolumePercent = document.getElementById('pauseVolumePercent');
+        if (pauseVolumePercent) pauseVolumePercent.innerText = `${percent}%`;
+    }
+
+    // ربط عناصر الواجهة والمزالق بأحداث التحكم بالصوت
+    initUIListeners() {
+        ['btnMute', 'btnNavMute', 'btnStartMuteToggle', 'btnPauseMuteToggle'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el && !el.dataset.soundBound) {
+                el.dataset.soundBound = 'true';
+                el.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    this.toggleMute();
+                });
+            }
+        });
+
+        ['hudVolumeRange', 'startVolumeRange', 'pauseVolumeRange'].forEach(id => {
+            const slider = document.getElementById(id);
+            if (slider && !slider.dataset.soundBound) {
+                slider.dataset.soundBound = 'true';
+                slider.addEventListener('input', (e) => {
+                    this.setVolume(e.target.value);
+                });
+            }
+        });
+
+        ['btnVolDown', 'btnStartVolDown', 'btnPauseVolDown'].forEach(id => {
+            const btn = document.getElementById(id);
+            if (btn && !btn.dataset.soundBound) {
+                btn.dataset.soundBound = 'true';
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    this.decreaseVolume(10);
+                });
+            }
+        });
+
+        ['btnVolUp', 'btnStartVolUp', 'btnPauseVolUp'].forEach(id => {
+            const btn = document.getElementById(id);
+            if (btn && !btn.dataset.soundBound) {
+                btn.dataset.soundBound = 'true';
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    this.increaseVolume(10);
+                });
+            }
+        });
     }
 
     // صوت خطوة الدجاجة اللطيفة

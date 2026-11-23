@@ -39,6 +39,12 @@
                 <span class="hamburger-bar"></span>
             </button>
 
+            <!-- زر التحكم السريع في الصوت في شريط الموقع العلوي -->
+            <button class="nav-sound-btn" id="btnNavMute" title="التحكم في صوت اللعبة (كتم / خفض / رفع)">
+                <span id="navSoundIcon">🔊</span>
+                <span id="navSoundText" class="nav-sound-text">الصوت: 100%</span>
+            </button>
+
             <!-- عناصر وروابط القائمة الرئيسية -->
             <div class="navbar-menu" id="navbarMenu">
                 <button class="nav-item-btn" id="navBtnHome">
@@ -52,6 +58,14 @@
                 <button class="nav-item-btn" id="navBtnSocial">
                     <span class="nav-icon">🌐</span>
                     <span>مواقع التواصل</span>
+                </button>
+                <button class="nav-item-btn nav-btn-partners" id="navBtnPartners" title="شركاء الألعاب والمنصات الرسمية">
+                    <span class="nav-icon">🤝</span>
+                    <span>شركاء الألعاب</span>
+                </button>
+                <button class="nav-item-btn" id="navBtnContact" title="اتصل بنا والدعم الفني">
+                    <span class="nav-icon">✉️</span>
+                    <span>اتصل بنا</span>
                 </button>
                 <button class="nav-item-btn nav-btn-winners" id="navBtnWinners">
                     <span class="nav-icon">🏆</span>
@@ -182,7 +196,16 @@
                         </button>
                         <button id="btnRestart" class="hud-btn" title="إعادة المرحلة">🔄</button>
                         <button id="btnPause" class="hud-btn" title="إيقاف مؤقت">⏸️</button>
-                        <button id="btnMute" class="hud-btn" title="الصوت">🔊</button>
+                        <!-- صندوق التحكم الشامل بالصوت وخفضه/رفعه -->
+                        <div class="hud-sound-box" id="hudSoundBox" title="التحكم في صوت اللعبة">
+                            <button id="btnMute" class="hud-btn hud-sound-btn" title="كتم / تفعيل الصوت">🔊</button>
+                            <div class="hud-volume-panel" id="hudVolumePanel">
+                                <button class="vol-btn" id="btnVolDown" title="خفض الصوت 10%">➖</button>
+                                <input type="range" id="hudVolumeRange" min="0" max="100" value="100" class="hud-volume-slider" title="مستوى الصوت">
+                                <button class="vol-btn" id="btnVolUp" title="رفع الصوت 10%">➕</button>
+                                <span id="hudVolumeLabel" class="hud-vol-label">100%</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </header>
@@ -325,6 +348,56 @@
         </aside>
     </div>
 
+    <!-- تذييل الموقع الرسمي والروابط القانونية الشاملة لـ Google AdSense -->
+    <footer class="main-legal-footer" id="mainLegalFooter">
+        <div class="legal-footer-container">
+            <div class="footer-col-about">
+                <div class="footer-brand-title">
+                    <span class="footer-logo">🐔</span>
+                    <span>مغامرة كوكو والأفخاخ</span>
+                </div>
+                <p class="footer-brand-desc">
+                    لعبة متصفح ويب تفاعلية مجانية 100% لتفادي الأفخاخ وجمع البيض الذهبي واستبدال النقاط بجوائز حقيقية وقسائم ألعاب. تجربة آمنة ومتوافقة مع الحواسيب وكافة شاشات الهواتف.
+                </p>
+                <div class="footer-contact-inline">
+                    <span>📧 التواصل الإداري:</span>
+                    <a href="mailto:nourdinmoutawakil59@gmail.com">nourdinmoutawakil59@gmail.com</a>
+                </div>
+            </div>
+
+            <div class="footer-col-links">
+                <h4 class="footer-col-title">⚖️ الروابط القانونية (AdSense)</h4>
+                <ul class="footer-links-list">
+                    <li><a href="privacy.html" id="linkFooterPrivacy" class="footer-nav-link">📄 سياسة الخصوصية (Privacy Policy)</a></li>
+                    <li><a href="terms.html" id="linkFooterTerms" class="footer-nav-link">📜 اتفاقية الاستخدام (Terms of Service)</a></li>
+                    <li><a href="contact.html" id="linkFooterContact" class="footer-nav-link">✉️ اتصل بنا والدعم الفني (Contact Us)</a></li>
+                    <li><a href="#about" id="linkFooterAbout" class="footer-nav-link">ℹ️ من نحن (About Us)</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col-links">
+                <h4 class="footer-col-title">🎮 أقسام وخدمات الموقع</h4>
+                <ul class="footer-links-list">
+                    <li><a href="#" id="linkFooterPartners" class="footer-nav-link">🤝 شركاء الألعاب والمنصات</a></li>
+                    <li><a href="#" id="linkFooterVouchers" class="footer-nav-link">🎁 متجر قسائم الشحن</a></li>
+                    <li><a href="#" id="linkFooterWinners" class="footer-nav-link">🏆 لوحة الشرف والفائزين</a></li>
+                    <li><a href="#" id="linkFooterSocial" class="footer-nav-link">🌐 قنوات التواصل الرسمية</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="legal-footer-bottom">
+            <div class="copyright-text">
+                جميع الحقوق محفوظة © 2026 <strong>لعبة مغامرة كوكو والأفخاخ</strong> (Chicken Trap Adventure). المطوّر والناشر: Nourdin Moutawakil.
+            </div>
+            <div class="footer-compliance-badges">
+                <span class="compliance-badge">🔒 اتصال مشفر SSL</span>
+                <span class="compliance-badge">🛡️ جدار حماية WAF</span>
+                <span class="compliance-badge">✅ متوافق مع سياسات Google AdSense</span>
+            </div>
+        </div>
+    </footer>
+
     <!-- نافذة البداية Start Modal -->
     <div id="startModal" class="modal-overlay">
         <div class="modal-content">
@@ -333,11 +406,28 @@
             <p class="modal-text">
                 ساعد الدجاجة "كوكو" في تفادي الأفخاخ القاتلة، الثعالب الماكرة، المناشير الدوارة، الحفر المخفية، والكرات الحديدية المشوكة، واجمع البيض الذهبي للعودة بأمان إلى قنها عبر <strong>15 مستوى شيقاً وفائق التحدي!</strong>
             </p>
+            <!-- شريط التحكم بالصوت المباشر في شاشة البداية -->
+            <div class="modal-sound-control">
+                <button id="btnStartMuteToggle" class="modal-sound-toggle-btn" title="كتم / تفعيل الصوت">
+                    <span id="startSoundIcon">🔊</span>
+                    <span id="startSoundLabel">الصوت: مفعّل 🔊</span>
+                </button>
+                <div class="modal-volume-slider-group">
+                    <button id="btnStartVolDown" class="vol-btn" title="خفض الصوت 10%">➖</button>
+                    <input type="range" id="startVolumeRange" min="0" max="100" value="100" class="modal-volume-slider" title="خفض / رفع الصوت">
+                    <button id="btnStartVolUp" class="vol-btn" title="رفع الصوت 10%">➕</button>
+                    <span id="startVolumePercent" class="volume-percent-badge">100%</span>
+                </div>
+            </div>
+
             <div class="btn-group">
                 <button id="btnStartGame" class="btn-action">▶️ ابدأ المغامرة الآن</button>
                 <button id="btnOpenLevelSelect" class="btn-secondary">📋 اختيار المراحل</button>
             </div>
             <div style="margin-top: 10px; display: flex; gap: 8px; flex-wrap: wrap; justify-content: center;">
+                <button id="btnStartPartners" class="btn-action" style="background: linear-gradient(135deg, #1565c0, #0d47a1); font-size: 0.95rem; padding: 10px 16px;">
+                    🤝 شركاء الألعاب الرسميون (Gaming Partners)
+                </button>
                 <button id="btnStartWinners" class="btn-action" style="background: linear-gradient(135deg, #d97706, #b45309); font-size: 0.95rem; padding: 10px 16px;">
                     🏆 قائمة الفائزين والمكافآت
                 </button>
@@ -368,6 +458,17 @@
                     ⚙️ الإدارة
                 </button>
             </div>
+            <div style="margin-top: 6px; display: flex; gap: 6px; justify-content: center; width: 100%; flex-wrap: wrap;">
+                <button id="btnStartPrivacy" class="btn-secondary" style="flex: 1; font-size: 0.8rem; padding: 6px 8px; white-space: nowrap;" title="سياسة الخصوصية">
+                    📄 سياسة الخصوصية
+                </button>
+                <button id="btnStartTerms" class="btn-secondary" style="flex: 1; font-size: 0.8rem; padding: 6px 8px; white-space: nowrap;" title="اتفاقية الاستخدام">
+                    📜 شروط الاستخدام
+                </button>
+                <button id="btnStartContact" class="btn-secondary" style="flex: 1; font-size: 0.8rem; padding: 6px 8px; white-space: nowrap;" title="اتصل بنا والدعم الفني">
+                    ✉️ اتصل بنا
+                </button>
+            </div>
         </div>
     </div>
 
@@ -389,6 +490,21 @@
         <div class="modal-content">
             <div class="modal-avatar">⏸️</div>
             <h2 class="modal-title">اللعبة متوقفة مؤقتاً</h2>
+
+            <!-- التحكم في الصوت أثناء الإيقاف المؤقت -->
+            <div class="modal-sound-control">
+                <button id="btnPauseMuteToggle" class="modal-sound-toggle-btn" title="كتم / تفعيل الصوت">
+                    <span id="pauseSoundIcon">🔊</span>
+                    <span id="pauseSoundLabel">الصوت: مفعّل 🔊</span>
+                </button>
+                <div class="modal-volume-slider-group">
+                    <button id="btnPauseVolDown" class="vol-btn" title="خفض الصوت 10%">➖</button>
+                    <input type="range" id="pauseVolumeRange" min="0" max="100" value="100" class="modal-volume-slider" title="خفض / رفع الصوت">
+                    <button id="btnPauseVolUp" class="vol-btn" title="رفع الصوت 10%">➕</button>
+                    <span id="pauseVolumePercent" class="volume-percent-badge">100%</span>
+                </div>
+            </div>
+
             <div class="btn-group">
                 <button id="btnResume" class="btn-action">▶️ متابعة اللعب</button>
                 <button id="btnPauseRestart" class="btn-secondary">🔄 إعادة المرحلة</button>
@@ -523,11 +639,11 @@
         </div>
     </div>
 
-    <!-- نافذة الإعلان المنبثق الإلزامي الدوري كل دقيقة مع مكافأة 500 نقطة (Mandatory Pop-up Ad Modal) -->
+    <!-- نافذة الإعلان المنبثق الإلزامي الدوري كل 10 دقائق مع مكافأة 500 نقطة (Mandatory Pop-up Ad Modal) -->
     <div id="mandatoryPopAdModal" class="modal-overlay" style="display: none; z-index: 10000;">
         <div class="modal-content" style="max-width: 560px; text-align: center; border: 2px solid rgba(255, 215, 0, 0.6); box-shadow: 0 10px 40px rgba(0,0,0,0.85); background: linear-gradient(180deg, #181b26 0%, #0d0f17 100%);">
             <div class="ad-banner-badge" style="position:static; margin-bottom:12px; background: linear-gradient(135deg, #ff9800, #e65100); color: #fff; font-size: 0.95rem; padding: 6px 16px;">
-                📢 إعلان إلزامي دوري (كل 60 ثانية) + مكافأة مجانية 🎁
+                📢 إعلان دوري (كل 10 دقائق) + مكافأة مجانية 🎁
             </div>
 
             <div class="ad-video-mockup" style="height: 220px; background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%); border: 1px solid rgba(255,255,255,0.15); border-radius: 14px; margin-bottom: 14px; position: relative; overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center;">
@@ -1154,6 +1270,153 @@
         </div>
     </div>
 
+    <!-- نافذة سياسة الخصوصية داخل اللعبة Privacy Policy Modal -->
+    <div id="privacyModal" class="modal-overlay" style="display: none;">
+        <div class="modal-content legal-modal-content">
+            <div class="legal-modal-header">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <span style="font-size: 2rem;">📄🛡️</span>
+                    <h2 class="modal-title gold" style="font-size: 1.5rem; margin: 0;">سياسة الخصوصية (Privacy Policy)</h2>
+                </div>
+                <button id="btnClosePrivacyModalTop" class="btn-secondary" style="padding: 4px 12px; font-size: 0.85rem; border-radius: 8px;">✕</button>
+            </div>
+
+            <div class="legal-modal-body">
+                <div class="legal-badge-pill">✅ متوافق مع شروط وسياسات Google AdSense و GDPR</div>
+                <p>
+                    أهلاً بك في <strong>مغامرة كوكو والأفخاخ</strong>. خصوصيتك تهمنا جداً، ونلتزم بأعلى معايير حماية البيانات والشفافية:
+                </p>
+
+                <h4 style="color: #ffd54f; margin-top: 12px;">1. ملفات تعريف الارتباط وإعلانات Google AdSense:</h4>
+                <p>
+                    تستخدم Google بصفتها مورداً لطرف ثالث ملفات تعريف الارتباط (Cookies)، ومنها ملف تعريف الارتباط <strong>DART</strong> لعرض إعلانات ملائمة للمستخدمين استناداً إلى زيارتهم لموقعنا ومواقع أخرى على الإنترنت. يمكنك إلغاء الاشتراك في استخدام ملف تعريف الارتباط DART بزيارة <a href="https://adssettings.google.com" target="_blank" rel="noopener noreferrer" style="color: #4fc3f7; text-decoration: underline;">إعدادات إعلانات Google</a>.
+                </p>
+
+                <h4 style="color: #ffd54f; margin-top: 12px;">2. تخزين البيانات محلياً (Local Storage):</h4>
+                <p>
+                    يتم تخزين تقدمك، ومستوياتك، ونقاطك، وإعدادات الصوت محلياً على متصفحك فقط عبر <code>localStorage</code>، ولا نطلب أو نخزن أي كلمات سر لحساباتك.
+                </p>
+
+                <h4 style="color: #ffd54f; margin-top: 12px;">3. حماية بيانات الأطفال (COPPA):</h4>
+                <p>
+                    موقعنا مناسب للجميع ولا يجمع عن قصد أي بيانات شخصية للأطفال دون سن 13 عاماً.
+                </p>
+
+                <h4 style="color: #ffd54f; margin-top: 12px;">4. التواصل وإدارة البيانات:</h4>
+                <p>
+                    المسؤول عن حماية البيانات وإدارة الموقع: <strong>Nourdin Moutawakil</strong> - البريد الإلكتروني: <a href="mailto:nourdinmoutawakil59@gmail.com" style="color: #4fc3f7;">nourdinmoutawakil59@gmail.com</a>.
+                </p>
+            </div>
+
+            <div style="display: flex; gap: 8px; width: 100%; margin-top: 10px;">
+                <a href="privacy.html" target="_blank" class="btn-action" style="flex: 1; justify-content: center; background: linear-gradient(135deg, #0288d1, #01579b); text-decoration: none; font-size: 0.9rem;">
+                    🌐 قراءة السياسة الكاملة في صفحة مستقلة
+                </a>
+                <button id="btnClosePrivacyModal" class="btn-secondary" style="padding: 8px 16px;">
+                    إغلاق
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- نافذة شروط الاستخدام داخل اللعبة Terms of Service Modal -->
+    <div id="termsModal" class="modal-overlay" style="display: none;">
+        <div class="modal-content legal-modal-content">
+            <div class="legal-modal-header">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <span style="font-size: 2rem;">📜⚖️</span>
+                    <h2 class="modal-title gold" style="font-size: 1.5rem; margin: 0;">اتفاقية وشروط الاستخدام (Terms of Service)</h2>
+                </div>
+                <button id="btnCloseTermsModalTop" class="btn-secondary" style="padding: 4px 12px; font-size: 0.85rem; border-radius: 8px;">✕</button>
+            </div>
+
+            <div class="legal-modal-body">
+                <div class="legal-badge-pill" style="border-color: #2196f3; color: #64b5f6;">⚖️ القواعد المنظمة للعب النظيف واستبدال الجوائز</div>
+                <p>
+                    باستخدامك للعبة <strong>مغامرة كوكو والأفخاخ</strong>، فإنك تقر وتوافق على الالتزام بالشروط والبنود التالية:
+                </p>
+
+                <h4 style="color: #ffd54f; margin-top: 12px;">1. قواعد اللعب النظيف ومكافحة الغش:</h4>
+                <p>
+                    يحظر تماماً استخدام برامج البوتات (Bots)، أو محررات الذاكرة، أو أي أدوات لتوليد نقاط غير حقيقية. اللعبة محمية بنظام جدار حماية (Anti-Cheat WAF) يرصد أي تلاعب ويقوم بإلغاء النقاط غير الشرعية فوراً.
+                </p>
+
+                <h4 style="color: #ffd54f; margin-top: 12px;">2. طبيعة النقاط والقسائم الترويجية:</h4>
+                <p>
+                    النقاط والبيض عناصر افتراضية ترويجية. استبدال النقاط بقسائم جواهر وشدات يخضع للتحقق الأمني من سلامة الحساب ويتم الشحن المعتمد خلال 24 - 48 ساعة.
+                </p>
+
+                <h4 style="color: #ffd54f; margin-top: 12px;">3. حقوق الملكية الفكرية:</h4>
+                <p>
+                    أكواد اللعبة، شخصية كوكو، والتصميمات محمية بحقوق النشر لصالح المطور <strong>Nourdin Moutawakil</strong>.
+                </p>
+            </div>
+
+            <div style="display: flex; gap: 8px; width: 100%; margin-top: 10px;">
+                <a href="terms.html" target="_blank" class="btn-action" style="flex: 1; justify-content: center; background: linear-gradient(135deg, #1565c0, #0d47a1); text-decoration: none; font-size: 0.9rem;">
+                    🌐 قراءة الشروط الكاملة في صفحة مستقلة
+                </a>
+                <button id="btnCloseTermsModal" class="btn-secondary" style="padding: 8px 16px;">
+                    إغلاق
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- نافذة اتصل بنا والدعم الفني داخل اللعبة Contact Us Modal -->
+    <div id="contactModal" class="modal-overlay" style="display: none;">
+        <div class="modal-content legal-modal-content">
+            <div class="legal-modal-header">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <span style="font-size: 2rem;">✉️🎧</span>
+                    <h2 class="modal-title gold" style="font-size: 1.5rem; margin: 0;">اتصل بنا والدعم الفني (Contact Us)</h2>
+                </div>
+                <button id="btnCloseContactModalTop" class="btn-secondary" style="padding: 4px 12px; font-size: 0.85rem; border-radius: 8px;">✕</button>
+            </div>
+
+            <div class="legal-modal-body">
+                <div style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 12px; margin-bottom: 12px; font-size: 0.88rem; line-height: 1.6;">
+                    📧 <strong>البريد المعتمد للإدارة والدعم:</strong> <a href="mailto:nourdinmoutawakil59@gmail.com" style="color: #4fc3f7; text-decoration: underline;">nourdinmoutawakil59@gmail.com</a><br>
+                    ⚡ الرد على الاستفسارات وطلبات اللاعبين يتم خلال <strong>24 إلى 48 ساعة</strong>.
+                </div>
+
+                <form id="modalContactForm" onsubmit="event.preventDefault(); window.featuresManager?.handleModalContactSubmit();">
+                    <div style="display: flex; gap: 8px; margin-bottom: 8px; flex-wrap: wrap;">
+                        <input type="text" id="modalContactName" class="form-input" placeholder="اسمك الكامل أو اسم اللاعب..." required style="flex: 1; font-size: 0.85rem; padding: 8px 10px;">
+                        <input type="email" id="modalContactEmail" class="form-input" placeholder="بريدك الإلكتروني للرد..." required style="flex: 1; font-size: 0.85rem; padding: 8px 10px;">
+                    </div>
+                    <div style="margin-bottom: 8px;">
+                        <select id="modalContactType" class="form-select" style="width: 100%; font-size: 0.85rem; padding: 8px 10px;">
+                            <option value="support">🛠️ دعم فني أو مشكلة في اللعبة</option>
+                            <option value="voucher">🎁 استفسار حول قسائم الشحن والجوائز</option>
+                            <option value="adsense">💼 استفسار حول الإعلانات أو الشراكات</option>
+                            <option value="privacy">📄 سياسة الخصوصية وحماية البيانات</option>
+                        </select>
+                    </div>
+                    <div style="margin-bottom: 8px;">
+                        <input type="text" id="modalContactSubject" class="form-input" placeholder="عنوان الرسالة..." required style="width: 100%; font-size: 0.85rem; padding: 8px 10px;">
+                    </div>
+                    <div style="margin-bottom: 8px;">
+                        <textarea id="modalContactMessage" class="form-textarea" placeholder="تفاصيل رسالتك أو استفسارك..." required style="width: 100%; height: 80px; font-size: 0.85rem; padding: 8px 10px;"></textarea>
+                    </div>
+                    <button type="submit" id="btnModalSubmitContact" class="btn-action" style="width: 100%; justify-content: center; padding: 10px;">
+                        ✉️ إرسال الرسالة للدعم الفني
+                    </button>
+                    <div id="modalContactFeedback" class="form-feedback" style="display: none; margin-top: 8px; font-size: 0.85rem;"></div>
+                </form>
+            </div>
+
+            <div style="display: flex; gap: 8px; width: 100%; margin-top: 10px;">
+                <a href="contact.html" target="_blank" class="btn-secondary" style="flex: 1; justify-content: center; text-decoration: none; font-size: 0.85rem; display: flex; align-items: center;">
+                    🌐 صفحة اتصل بنا الكاملة والأسئلة الشائعة
+                </a>
+                <button id="btnCloseContactModal" class="btn-secondary" style="padding: 8px 16px;">
+                    إغلاق
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- نافذة مواقع التواصل الاجتماعي Social Media Modal -->
     <div id="socialMediaModal" class="modal-overlay">
         <div class="modal-content" style="max-width: 660px; max-height: 90vh; overflow-y: auto;">
@@ -1252,6 +1515,337 @@
             <div class="btn-group" style="width: 100%; margin-top: 6px;">
                 <button id="btnCloseSocialModal" class="btn-secondary" style="width: 100%;">
                     إغلاق
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- نافذة شركاء الألعاب والمنصات الرسمية Gaming Partners Modal -->
+    <div id="partnersModal" class="modal-overlay" style="display: none;">
+        <div class="modal-content partners-modal-content">
+            <div class="partners-modal-header">
+                <div class="partners-modal-title-group">
+                    <div class="partners-header-icon">🤝🎮</div>
+                    <div>
+                        <h2 class="modal-title gold" style="font-size: 1.6rem; margin-bottom: 4px;">شركاء الألعاب والمنصات الرسمية</h2>
+                        <p class="modal-subtitle">
+                            روابط وخدمات معتمدة حصرياً لمجتمع اللاعبين: منصات كبرى، شحن فوري، وعتاد احترافي
+                        </p>
+                    </div>
+                </div>
+                <button id="btnClosePartnersModalTop" class="btn-secondary close-modal-pill" title="إغلاق النافذة">✕ إغلاق</button>
+            </div>
+
+            <!-- شريط فلترة التصنيفات -->
+            <div class="partners-filter-bar">
+                <button class="partner-filter-btn active" data-filter="all">🌟 جميع الشركاء</button>
+                <button class="partner-filter-btn" data-filter="platforms">🎮 منصات ومتاجر الألعاب</button>
+                <button class="partner-filter-btn" data-filter="topup">💎 شحن وبطاقات الألعاب</button>
+                <button class="partner-filter-btn" data-filter="gear">🎧 عتاد ومجتمعات</button>
+            </div>
+
+            <!-- شبكة بطاقات الشركاء الرسميين -->
+            <div class="partners-grid" id="partnersGrid">
+                <!-- 1. Steam -->
+                <div class="partner-card" data-category="platforms">
+                    <div class="partner-card-header">
+                        <div class="partner-icon-box steam-icon">🎮</div>
+                        <div class="partner-info-box">
+                            <span class="partner-badge platform-badge">منصة PC #1 عالمياً</span>
+                            <h3 class="partner-name">Steam (فالف ستيم)</h3>
+                            <span class="partner-site">store.steampowered.com</span>
+                        </div>
+                    </div>
+                    <p class="partner-description">
+                        أضخم متجر رقمي ومجتمع لألعاب الكمبيوتر عالمياً، تخفيضات موسمية هائلة، ودعم لآلاف الألعاب والبطولات التنافسية.
+                    </p>
+                    <div class="partner-tags">
+                        <span class="partner-tag">💻 PC Gaming</span>
+                        <span class="partner-tag">🏷️ تخفيضات كبرى</span>
+                        <span class="partner-tag">🌐 مجتمع عالمي</span>
+                    </div>
+                    <a href="https://store.steampowered.com" target="_blank" rel="noopener noreferrer" class="partner-visit-btn">
+                        <span>زيارة المنصة الرسمية</span>
+                        <span class="partner-arrow">↗️</span>
+                    </a>
+                </div>
+
+                <!-- 2. PlayStation Network -->
+                <div class="partner-card" data-category="platforms">
+                    <div class="partner-card-header">
+                        <div class="partner-icon-box ps-icon">🕹️</div>
+                        <div class="partner-info-box">
+                            <span class="partner-badge platform-badge">سوني بلايستيشن الرسمية</span>
+                            <h3 class="partner-name">PlayStation Network</h3>
+                            <span class="partner-site">playstation.com</span>
+                        </div>
+                    </div>
+                    <p class="partner-description">
+                        متجر سوني الحصري لأجهزة PS5 وPS4، اشتراكات PlayStation Plus، وبطاقات الهدايا للألعاب الحصرية واللعب أونلاين.
+                    </p>
+                    <div class="partner-tags">
+                        <span class="partner-tag">🎮 PS5 / PS4</span>
+                        <span class="partner-tag">🌟 PS Plus</span>
+                        <span class="partner-tag">🎟️ بطاقات هدايا</span>
+                    </div>
+                    <a href="https://www.playstation.com" target="_blank" rel="noopener noreferrer" class="partner-visit-btn">
+                        <span>زيارة متجر سوني الرسمي</span>
+                        <span class="partner-arrow">↗️</span>
+                    </a>
+                </div>
+
+                <!-- 3. Xbox Game Pass -->
+                <div class="partner-card" data-category="platforms">
+                    <div class="partner-card-header">
+                        <div class="partner-icon-box xbox-icon">🟢</div>
+                        <div class="partner-info-box">
+                            <span class="partner-badge platform-badge">إكس بوكس مايكروسوفت</span>
+                            <h3 class="partner-name">Xbox Game Pass</h3>
+                            <span class="partner-site">xbox.com</span>
+                        </div>
+                    </div>
+                    <p class="partner-description">
+                        اشتراك ألعاب يمنحك ولوجاً لمئات الألعاب القوية على أجهزة Xbox والكمبيوتر مع إمكانية اللعب السحابي الفوري Cloud Gaming.
+                    </p>
+                    <div class="partner-tags">
+                        <span class="partner-tag">🟩 Xbox Series X|S</span>
+                        <span class="partner-tag">☁️ Cloud Gaming</span>
+                        <span class="partner-tag">🎁 مكتبة ألعاب ضخمة</span>
+                    </div>
+                    <a href="https://www.xbox.com" target="_blank" rel="noopener noreferrer" class="partner-visit-btn">
+                        <span>زيارة موقع إكس بوكس</span>
+                        <span class="partner-arrow">↗️</span>
+                    </a>
+                </div>
+
+                <!-- 4. Epic Games Store -->
+                <div class="partner-card" data-category="platforms">
+                    <div class="partner-card-header">
+                        <div class="partner-icon-box epic-icon">⚡</div>
+                        <div class="partner-info-box">
+                            <span class="partner-badge platform-badge">إيبك جيمز الرسمية</span>
+                            <h3 class="partner-name">Epic Games Store</h3>
+                            <span class="partner-site">store.epicgames.com</span>
+                        </div>
+                    </div>
+                    <p class="partner-description">
+                        متجر الألعاب ومحرك Unreal Engine، يشتهر بتقديم ألعاب أسبوعية مجانية لجميع اللاعبين وعروض وتخفيضات مستمرة.
+                    </p>
+                    <div class="partner-tags">
+                        <span class="partner-tag">🎁 ألعاب مجانية أسبوعياً</span>
+                        <span class="partner-tag">🔥 Unreal Engine</span>
+                        <span class="partner-tag">🚀 ألعاب حصرية</span>
+                    </div>
+                    <a href="https://store.epicgames.com" target="_blank" rel="noopener noreferrer" class="partner-visit-btn">
+                        <span>زيارة إيبك جيمز الرسمي</span>
+                        <span class="partner-arrow">↗️</span>
+                    </a>
+                </div>
+
+                <!-- 5. Garena Free Fire (Shop2Game) -->
+                <div class="partner-card" data-category="topup">
+                    <div class="partner-card-header">
+                        <div class="partner-icon-box ff-icon">🔥</div>
+                        <div class="partner-info-box">
+                            <span class="partner-badge topup-badge">الشريك المعتمد لفري فاير</span>
+                            <h3 class="partner-name">Garena Free Fire (Shop2Game)</h3>
+                            <span class="partner-site">shop2game.com</span>
+                        </div>
+                    </div>
+                    <p class="partner-description">
+                        البوابة الرسمية الوحيدة المعتمدة من شركة قارينا لشحن جواهر فري فاير بالمعرف (Player ID) مع بونص إضافي وعروض الفاير باس.
+                    </p>
+                    <div class="partner-tags">
+                        <span class="partner-tag">💎 شحن ID فوري</span>
+                        <span class="partner-tag">🛡️ رسمي 100%</span>
+                        <span class="partner-tag">🎁 بونص إضافي</span>
+                    </div>
+                    <a href="https://shop2game.com" target="_blank" rel="noopener noreferrer" class="partner-visit-btn">
+                        <span>شحن فري فاير الرسمي</span>
+                        <span class="partner-arrow">↗️</span>
+                    </a>
+                </div>
+
+                <!-- 6. PUBG Mobile (Midasbuy) -->
+                <div class="partner-card" data-category="topup">
+                    <div class="partner-card-header">
+                        <div class="partner-icon-box pubg-icon">🎯</div>
+                        <div class="partner-info-box">
+                            <span class="partner-badge topup-badge">الشريك الحصري لببجي موبايل</span>
+                            <h3 class="partner-name">Midasbuy (ببجي موبايل)</h3>
+                            <span class="partner-site">midasbuy.com</span>
+                        </div>
+                    </div>
+                    <p class="partner-description">
+                        المركز الرسمي العالمي المعتمد لشحن شدات ببجي موبايل (UC) وحزم الرويال باس فوراً وآمناً مع دعم وسائل الدفع المحلية والعالمية.
+                    </p>
+                    <div class="partner-tags">
+                        <span class="partner-tag">🪙 شحن شدات UC</span>
+                        <span class="partner-tag">🎖️ رويال باس</span>
+                        <span class="partner-tag">⚡ تسليم فوري</span>
+                    </div>
+                    <a href="https://www.midasbuy.com" target="_blank" rel="noopener noreferrer" class="partner-visit-btn">
+                        <span>شحن ببجي Midasbuy الرسمي</span>
+                        <span class="partner-arrow">↗️</span>
+                    </a>
+                </div>
+
+                <!-- 7. Google Play Games -->
+                <div class="partner-card" data-category="topup">
+                    <div class="partner-card-header">
+                        <div class="partner-icon-box google-icon">📱</div>
+                        <div class="partner-info-box">
+                            <span class="partner-badge topup-badge">متجر جوجل بلاي جيمز</span>
+                            <h3 class="partner-name">Google Play Games</h3>
+                            <span class="partner-site">play.google.com/store/games</span>
+                        </div>
+                    </div>
+                    <p class="partner-description">
+                        منصة وبطاقات هدايا Google Play الرسمية لتنزيل وشحن ألعاب الهواتف والكمبيوتر ومزامنة الحسابات والإنجازات السحابية.
+                    </p>
+                    <div class="partner-tags">
+                        <span class="partner-tag">💳 بطاقات جوجل بلاي</span>
+                        <span class="partner-tag">🤖 ألعاب أندرويد وPC</span>
+                        <span class="partner-tag">🏆 نقاط Play Points</span>
+                    </div>
+                    <a href="https://play.google.com/store/games" target="_blank" rel="noopener noreferrer" class="partner-visit-btn">
+                        <span>زيارة جوجل بلاي جيمز</span>
+                        <span class="partner-arrow">↗️</span>
+                    </a>
+                </div>
+
+                <!-- 8. Razer Gaming & Razer Gold -->
+                <div class="partner-card" data-category="gear">
+                    <div class="partner-card-header">
+                        <div class="partner-icon-box razer-icon">🐍</div>
+                        <div class="partner-info-box">
+                            <span class="partner-badge gear-badge">عتاد وبطاقات ألعاب احترافية</span>
+                            <h3 class="partner-name">Razer Gaming & Razer Gold</h3>
+                            <span class="partner-site">gold.razer.com</span>
+                        </div>
+                    </div>
+                    <p class="partner-description">
+                        الرائدة العالمية في عتاد الجيمنج (سماعات، كيبوردات ميكانيكية، ماوسات) وعملة Razer Gold لشحن آلاف الألعاب حول العالم.
+                    </p>
+                    <div class="partner-tags">
+                        <span class="partner-tag">🎧 عتاد احترافي</span>
+                        <span class="partner-tag">🪙 بطاقات Razer Gold</span>
+                        <span class="partner-tag">⭐ مكافآت Silver</span>
+                    </div>
+                    <a href="https://gold.razer.com" target="_blank" rel="noopener noreferrer" class="partner-visit-btn">
+                        <span>زيارة متجر ريزر الرسمي</span>
+                        <span class="partner-arrow">↗️</span>
+                    </a>
+                </div>
+
+                <!-- 9. Discord Gaming -->
+                <div class="partner-card" data-category="gear">
+                    <div class="partner-card-header">
+                        <div class="partner-icon-box discord-icon">💬</div>
+                        <div class="partner-info-box">
+                            <span class="partner-badge gear-badge">مجتمع وصوت اللاعبين</span>
+                            <h3 class="partner-name">Discord (ديسكورد للألعاب)</h3>
+                            <span class="partner-site">discord.com</span>
+                        </div>
+                    </div>
+                    <p class="partner-description">
+                        منصة التواصل الصوتي والمرئي الأولى للاعبين عالمياً، إنشاء سيرفرات الألعاب، بث الشاشات بدقة فائقة، وتنظيم البطولات.
+                    </p>
+                    <div class="partner-tags">
+                        <span class="partner-tag">🎙️ غرف صوتية فورية</span>
+                        <span class="partner-tag">📺 بث ألعاب HD</span>
+                        <span class="partner-tag">👥 مجتمعات الجيمرز</span>
+                    </div>
+                    <a href="https://discord.com" target="_blank" rel="noopener noreferrer" class="partner-visit-btn">
+                        <span>انضم لمجتمع ديسكورد</span>
+                        <span class="partner-arrow">↗️</span>
+                    </a>
+                </div>
+
+                <!-- 10. EA Sports -->
+                <div class="partner-card" data-category="platforms">
+                    <div class="partner-card-header">
+                        <div class="partner-icon-box ea-icon">⚽</div>
+                        <div class="partner-info-box">
+                            <span class="partner-badge platform-badge">المطورة العالمية للألعاب</span>
+                            <h3 class="partner-name">EA SPORTS (إلكترونيك آرتس)</h3>
+                            <span class="partner-site">ea.com</span>
+                        </div>
+                    </div>
+                    <p class="partner-description">
+                        الشركة العالمية المطورة لأشهر سلاسل الألعاب التنافسية: EA SPORTS FC (فيفا سابقاً)، Apex Legends، وBattlefield.
+                    </p>
+                    <div class="partner-tags">
+                        <span class="partner-tag">⚽ EA SPORTS FC</span>
+                        <span class="partner-tag">💥 Apex Legends</span>
+                        <span class="partner-tag">🏆 بطولات عالمية</span>
+                    </div>
+                    <a href="https://www.ea.com" target="_blank" rel="noopener noreferrer" class="partner-visit-btn">
+                        <span>زيارة موقع EA الرسمي</span>
+                        <span class="partner-arrow">↗️</span>
+                    </a>
+                </div>
+
+                <!-- 11. Twitch Gaming -->
+                <div class="partner-card" data-category="gear">
+                    <div class="partner-card-header">
+                        <div class="partner-icon-box twitch-icon">🟣</div>
+                        <div class="partner-info-box">
+                            <span class="partner-badge gear-badge">بثوث وبطولات Esports</span>
+                            <h3 class="partner-name">Twitch Gaming</h3>
+                            <span class="partner-site">twitch.tv</span>
+                        </div>
+                    </div>
+                    <p class="partner-description">
+                        المنصة العالمية الأولى لمتابعة البث المباشر لألعاب الفيديو، بطولات الرياضات الإلكترونية، وربح جوائز Twitch Drops المجانية.
+                    </p>
+                    <div class="partner-tags">
+                        <span class="partner-tag">🔴 بثوث مباشرة</span>
+                        <span class="partner-tag">🎁 Twitch Drops</span>
+                        <span class="partner-tag">🏆 بطولات Esports</span>
+                    </div>
+                    <a href="https://www.twitch.tv" target="_blank" rel="noopener noreferrer" class="partner-visit-btn">
+                        <span>زيارة منصة تويتش</span>
+                        <span class="partner-arrow">↗️</span>
+                    </a>
+                </div>
+
+                <!-- 12. Konami eFootball -->
+                <div class="partner-card" data-category="platforms">
+                    <div class="partner-card-header">
+                        <div class="partner-icon-box konami-icon">🏆</div>
+                        <div class="partner-info-box">
+                            <span class="partner-badge platform-badge">كونامي إي فوتبول الرسمية</span>
+                            <h3 class="partner-name">Konami eFootball</h3>
+                            <span class="partner-site">konami.com/efootball</span>
+                        </div>
+                    </div>
+                    <p class="partner-description">
+                        الموقع الرسمي لعملاقة كرة القدم التنافسية eFootball (PES)، أحداث وبطولات أسبوعية، والحملات الحصرية لكوينز اللعبة.
+                    </p>
+                    <div class="partner-tags">
+                        <span class="partner-tag">⚽ eFootball 2026</span>
+                        <span class="partner-tag">🪙 حملات الكوينز</span>
+                        <span class="partner-tag">📱 Cross-Play</span>
+                    </div>
+                    <a href="https://www.konami.com/efootball" target="_blank" rel="noopener noreferrer" class="partner-visit-btn">
+                        <span>زيارة موقع eFootball الرسمي</span>
+                        <span class="partner-arrow">↗️</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- ملاحظة توضيحية ختامية -->
+            <div class="partners-footer-note">
+                <div class="partners-note-icon">💡</div>
+                <div class="partners-note-text">
+                    <strong>ملاحظة للاعبين:</strong> جميع الشركاء والمنصات المذكورة أعلاه هي جهات رسمية ومعتمدة دولياً في مجال ألعاب الفيديو والرياضات الإلكترونية وشحن البطاقات. الروابط تنقلك مباشرة إلى المواقع الرسمية الموثوقة.
+                </div>
+            </div>
+
+            <div class="btn-group" style="width: 100%; margin-top: 10px;">
+                <button id="btnClosePartnersModal" class="btn-action" style="width: 100%; justify-content: center; background: linear-gradient(135deg, #1565c0, #0d47a1);">
+                    حسناً، عودة للعبة 🎮
                 </button>
             </div>
         </div>

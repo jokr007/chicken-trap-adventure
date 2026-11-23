@@ -1,0 +1,27 @@
+# Large media & recordings
+*.mp4
+*.mov
+*.avi
+*.mkv
+*.wav
+
+# Scratch & temporary workspace
+scratch/
+__pycache__/
+*.pyc
+
+# IDE & Editor files
+.vs/
+.vscode/
+.idea/
+
+# Node & dependencies
+node_modules/
+
+# Mobile App build artifacts
+Chicken_Game_Mobile_App/
+
+# System files
+Thumbs.db
+Desktop.ini
+.DS_Store

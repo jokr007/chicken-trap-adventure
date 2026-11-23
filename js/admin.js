@@ -189,6 +189,9 @@ class AdminManager {
             // منع حاجب الإعلانات
             antiAdblockEnabled: true,
 
+            // الفاصل الزمني لظهور الإعلان المنبثق الإلزامي الدوري (بالدقائق)
+            mandatoryAdIntervalMinutes: 10,
+
             // إعدادات سحب الأموال الحقيقية
             pointsPerUSD: 50000,
             minWithdrawalUSD: 5
@@ -293,6 +296,10 @@ class AdminManager {
         if (directLinkInp) {
             directLinkInp.value = this.config.directAdLink || '';
         }
+        const intervalInp = document.getElementById('adminAdIntervalInput');
+        if (intervalInp) {
+            intervalInp.value = this.config.mandatoryAdIntervalMinutes || 10;
+        }
     }
 
     /**
@@ -311,10 +318,13 @@ class AdminManager {
         const adsenseVal = adsenseInp ? adsenseInp.value.trim() : '';
         const monetagVal = monetagInp ? monetagInp.value.trim() : '';
         const directLinkVal = directLinkInp ? directLinkInp.value.trim() : '';
+        const intervalInp = document.getElementById('adminAdIntervalInput');
+        const intervalVal = intervalInp ? parseInt(intervalInp.value, 10) : 10;
 
         this.config.adsensePubId = adsenseVal;
         this.config.monetagZoneId = monetagVal;
         this.config.directAdLink = directLinkVal;
+        this.config.mandatoryAdIntervalMinutes = (!isNaN(intervalVal) && intervalVal > 0) ? intervalVal : 10;
         this.config.realAdsActive = !!((adsenseVal && adsenseVal.startsWith('ca-pub-')) || monetagVal);
 
         // 1. حفظ الإعدادات في localStorage عبر نظام الحفظ المركزي
@@ -1452,6 +1462,14 @@ class AdminManager {
                     </label>
                     <input type="url" id="adminDirectLinkInput" class="monetization-input" placeholder="https://example.com/smartlink">
                     <small style="color:#78909c;">عند وضعه، يُفتح هذا الرابط عند مشاهدة إعلان المكافأة ليحقق لك أرباحاً فورية حقيقية!</small>
+                </div>
+
+                <div class="monetization-input-group" style="margin-top: 8px;">
+                    <label style="color: #b0bec5; font-weight: 700; font-size: 0.9rem;">
+                        4. الفاصل الزمني لظهور الإعلان المنبثق الإلزامي (بالدقائق):
+                    </label>
+                    <input type="number" id="adminAdIntervalInput" min="1" max="60" class="monetization-input" placeholder="10" value="10">
+                    <small style="color:#78909c;">الوقت المحدد لظهور الإعلان المنبثق الإلزامي أثناء اللعب (تم ضبطه على 10 دقائق).</small>
                 </div>
 
                 <button id="btnSaveAdminAds" class="btn-action" style="margin-top: 12px; width: 100%; justify-content: center;">

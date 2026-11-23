@@ -28,9 +28,59 @@ class AdManager {
         this.currentCountdown = 5;
         this.countdownTimer = null;
         this.mandatoryTimer = null;
+        this.lastAdTimestamp = this.loadLastAdTimestamp();
 
         this.loadSavedStats();
         this.initGoogleAdSense();
+    }
+
+    loadLastAdTimestamp() {
+        try {
+            const saved = localStorage.getItem('chicken_last_ad_timestamp');
+            if (saved) {
+                return parseInt(saved, 10) || 0;
+            } else {
+                const now = Date.now();
+                localStorage.setItem('chicken_last_ad_timestamp', now.toString());
+                return now;
+            }
+        } catch (e) {
+            return Date.now();
+        }
+    }
+
+    // التحقق الصارم من انقضاء مهلة الـ 10 دقائق كاملة قبل السماح بأي إعلان تلقائي
+    canShowAutomaticAd() {
+        const adIntervalMinutes = (window.adminConfig && window.adminConfig.mandatoryAdIntervalMinutes)
+            ? window.adminConfig.mandatoryAdIntervalMinutes
+            : 10;
+        const cooldownMs = adIntervalMinutes * 60 * 1000;
+
+        let lastAdTime = this.lastAdTimestamp || 0;
+        try {
+            const saved = localStorage.getItem('chicken_last_ad_timestamp');
+            if (saved) {
+                lastAdTime = Math.max(lastAdTime, parseInt(saved, 10) || 0);
+            }
+        } catch (e) {}
+
+        const now = Date.now();
+        const elapsed = now - lastAdTime;
+        return elapsed >= cooldownMs;
+    }
+
+    // تسجيل ظهور الإعلان وإعادة ضبط عداد الـ 10 دقائق في الذاكرة والمتصفح
+    recordAdShown() {
+        const now = Date.now();
+        this.lastAdTimestamp = now;
+        try {
+            localStorage.setItem('chicken_last_ad_timestamp', now.toString());
+        } catch (e) {}
+
+        if (window.game) {
+            window.game.activePlayTimeMs = 0;
+            window.game.lastActiveTimestamp = now;
+        }
     }
 
     loadSavedStats() {
@@ -209,6 +259,7 @@ class AdManager {
                         closeBtn.onclick = null;
                         if (modal) modal.style.display = 'none';
                         this.isAdPlaying = false;
+                        this.recordAdShown();
                         if (onRewardSuccess) onRewardSuccess();
                     };
                 }
@@ -218,6 +269,12 @@ class AdManager {
 
     // 2. عرض إعلان بيني (Interstitial Ad) بين المراحل
     showInterstitialAd(onComplete) {
+        // حماية مؤكدة: لا يظهر أي إعلان بيني إطلاقاً إلا بعد مرور 10 دقائق كاملة منذ آخر إعلان
+        if (!this.canShowAutomaticAd()) {
+            if (onComplete) onComplete();
+            return;
+        }
+
         this.levelCompletedCount++;
 
         // إظهار الإعلان كل عدد معين من المراحل (حسب الإعدادات)
@@ -232,6 +289,7 @@ class AdManager {
         }
 
         this.isAdPlaying = true;
+        this.recordAdShown();
         const modal = document.getElementById('interstitialAdModal');
         const skipBtn = document.getElementById('btnSkipInterstitial');
 
@@ -272,6 +330,7 @@ class AdManager {
                         skipBtn.onclick = null;
                         if (modal) modal.style.display = 'none';
                         this.isAdPlaying = false;
+                        this.recordAdShown();
                         if (onComplete) onComplete();
                     };
                 }
@@ -279,14 +338,21 @@ class AdManager {
         }, 1000);
     }
 
-    // 3. عرض إعلان منبثق إلزامي دوري كل دقيقة (Mandatory Pop-up Ad) مع مكافأة 500 نقطة
+    // 3. عرض إعلان منبثق إلزامي دوري كل 10 دقائق (Mandatory Pop-up Ad) مع مكافأة 500 نقطة
     showMandatoryPopUpAd(onSuccess) {
+        // حماية مؤكدة: لا يظهر أي إعلان إلزامي إلا بعد انقضاء 10 دقائق كاملة منذ آخر إعلان
+        if (!this.canShowAutomaticAd()) {
+            if (onSuccess) onSuccess();
+            return;
+        }
+
         if (this.isAdPlaying) {
             // حماية جوهرية: عدم تجميد اللعبة إطلاقاً في حال كان إعلان آخر قيد التشغيل
             if (onSuccess) onSuccess();
             return;
         }
         this.isAdPlaying = true;
+        this.recordAdShown();
 
         const modal = document.getElementById('mandatoryPopAdModal');
         const countElem = document.getElementById('mandatoryAdCount');
@@ -343,6 +409,7 @@ class AdManager {
                         closeBtn.onclick = null;
                         if (modal) modal.style.display = 'none';
                         this.isAdPlaying = false;
+                        this.recordAdShown();
                         if (onSuccess) onSuccess();
                     };
                 }
